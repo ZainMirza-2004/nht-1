@@ -294,7 +294,7 @@ export default function ParkingPage() {
     }
   };
 
-  const totalPrice = formData.permitType === 'paid' ? formData.numberOfNights * 1 : 0;
+  const totalPrice = formData.permitType === 'paid' ? formData.numberOfNights * 5 : 0;
 
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-stone-50 via-white to-stone-50">
@@ -420,7 +420,7 @@ export default function ParkingPage() {
                     {errorMessage || 'Failed to send your request. Please try again or contact us directly.'}
                   </p>
                   <p className="text-red-600 text-sm text-center mt-2 font-light">
-                    If this problem persists, please contact us directly at parking@nhtestates.com
+                    If this problem persists, please contact us directly at info@nhtestates.co.uk
                   </p>
                 </div>
               )}
@@ -619,10 +619,10 @@ export default function ParkingPage() {
               <div className="group">
                 <p className="text-xs font-medium tracking-wider text-gray-500 uppercase mb-2">Email</p>
                 <a
-                  href="mailto:parking@nhtestates.com"
+                  href="mailto:info@nhtestates.co.uk"
                   className="text-lg text-gray-900 hover:text-amber-700 font-light transition-colors duration-300 flex items-center justify-center gap-2"
                 >
-                  parking@nhtestates.com
+                  info@nhtestates.co.uk
                   <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                   </svg>
@@ -632,7 +632,7 @@ export default function ParkingPage() {
               <div className="group">
                 <p className="text-xs font-medium tracking-wider text-gray-500 uppercase mb-2">Phone</p>
                 <a
-                  href="tel:+441234567890"
+                  href="tel:+447767992108"
                   className="text-lg text-gray-900 hover:text-amber-700 font-light transition-colors duration-300 flex items-center justify-center gap-2"
                 >
                   +44 7767 992108

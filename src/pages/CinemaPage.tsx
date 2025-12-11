@@ -34,7 +34,7 @@ const cinemaTiers: TierOption[] = [
   {
     id: 'premium',
     name: 'Premium Experience',
-    price: 1,
+    price: 110,
     description: 'Most popular choice',
     badge: 'Most Popular',
     popular: true,
@@ -732,7 +732,7 @@ export default function CinemaPage() {
             <div className="group">
               <p className="text-xs font-medium tracking-wider text-gray-500 uppercase mb-2">Phone</p>
               <a 
-                href="tel:+441234567890" 
+                href="tel:+447767992108" 
                 className="text-lg text-gray-900 hover:text-amber-700 font-light transition-colors duration-300 flex items-center gap-2"
               >
                 +44 7767 992108

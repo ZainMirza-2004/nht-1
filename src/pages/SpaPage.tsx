@@ -33,7 +33,7 @@ const spaTiers: TierOption[] = [
   {
     id: 'premium',
     name: 'Premium Experience',
-    price: 1,
+    price: 70,
     description: 'Most popular choice',
     badge: 'Most Popular',
     popular: true,
@@ -717,10 +717,10 @@ export default function SpaPage() {
             <div className="group">
               <p className="text-xs font-medium tracking-wider text-gray-500 uppercase mb-2">Email</p>
               <a 
-                href="mailto:spa@nhtestates.com" 
+                href="mailto:info@nhtestates.co.uk" 
                 className="text-lg text-gray-900 hover:text-amber-700 font-light transition-colors duration-300 flex items-center gap-2"
               >
-                spa@nhtestates.com
+                info@nhtestates.co.uk
                 <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                 </svg>
@@ -730,10 +730,10 @@ export default function SpaPage() {
             <div className="group">
               <p className="text-xs font-medium tracking-wider text-gray-500 uppercase mb-2">Phone</p>
               <a 
-                href="tel:+441234567890" 
+                href="tel:+447767992108" 
                 className="text-lg text-gray-900 hover:text-amber-700 font-light transition-colors duration-300 flex items-center gap-2"
               >
-                +44 1234 567890
+                +44 7767 992108
                 <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                 </svg>

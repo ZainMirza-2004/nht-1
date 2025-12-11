@@ -707,7 +707,7 @@ export default function BookingConfirmationPage() {
           <h3 className="text-xl font-light text-gray-900 mb-6 text-center">Need Assistance?</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <a
-              href="mailto:info@nhtestates.com"
+              href="mailto:info@nhtestates.co.uk"
               className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-blue-900 hover:bg-blue-50 transition-all group"
             >
               <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
@@ -715,7 +715,7 @@ export default function BookingConfirmationPage() {
               </div>
               <div>
                 <p className="text-sm text-gray-500 font-medium mb-1">Email</p>
-                <p className="text-gray-900 font-light">info@nhtestates.com</p>
+                <p className="text-gray-900 font-light">info@nhtestates.co.uk</p>
               </div>
             </a>
             <a
