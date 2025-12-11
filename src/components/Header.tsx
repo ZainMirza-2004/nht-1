@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Waves } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,7 +20,6 @@ export default function Header() {
     { to: '/spa', label: 'Spa' },
     { to: '/cinema', label: 'Cinema' },
     { to: '/parking', label: 'Parking Permit' },
-    { to: '/blog', label: 'Blog' },
   ];
 
   return (
@@ -33,8 +32,12 @@ export default function Header() {
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          <Link to="/" className="flex items-center space-x-2 group">
-            <Waves className="h-8 w-8 text-blue-900 group-hover:text-blue-700 transition-colors" />
+          <Link to="/" className="flex items-center space-x-0.1 group">
+            <img 
+              src="/logo1.png" 
+              alt="NH&T Estates" 
+              className="h-12 w-auto transition-opacity duration-300 group-hover:opacity-90"
+            />
             <span className="text-2xl font-serif text-blue-900 tracking-wide">
               NH&T Estates
             </span>

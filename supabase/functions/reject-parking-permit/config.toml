@@ -1,0 +1,3 @@
+[functions.reject-parking-permit]
+verify_jwt = false
+

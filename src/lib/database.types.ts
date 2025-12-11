@@ -19,7 +19,12 @@ export interface Database {
           time_slot: string
           package_type: string
           package_price: number
+          experience_tier: string | null
+          status: 'pending' | 'confirmed' | 'paid' | 'cancelled' | 'completed'
+          payment_intent_id: string | null
+          payment_status: 'pending' | 'succeeded' | 'failed' | 'refunded' | null
           created_at: string
+          updated_at: string | null
         }
         Insert: {
           id?: string
@@ -30,7 +35,12 @@ export interface Database {
           time_slot: string
           package_type: string
           package_price: number
+          experience_tier?: string | null
+          status?: 'pending' | 'confirmed' | 'paid' | 'cancelled' | 'completed'
+          payment_intent_id?: string | null
+          payment_status?: 'pending' | 'succeeded' | 'failed' | 'refunded' | null
           created_at?: string
+          updated_at?: string | null
         }
         Update: {
           id?: string
@@ -41,7 +51,12 @@ export interface Database {
           time_slot?: string
           package_type?: string
           package_price?: number
+          experience_tier?: string | null
+          status?: 'pending' | 'confirmed' | 'paid' | 'cancelled' | 'completed'
+          payment_intent_id?: string | null
+          payment_status?: 'pending' | 'succeeded' | 'failed' | 'refunded' | null
           created_at?: string
+          updated_at?: string | null
         }
       }
       cinema_bookings: {
@@ -54,7 +69,12 @@ export interface Database {
           time_slot: string
           package_type: string
           package_price: number
+          experience_tier: string | null
+          status: 'pending' | 'confirmed' | 'paid' | 'cancelled' | 'completed'
+          payment_intent_id: string | null
+          payment_status: 'pending' | 'succeeded' | 'failed' | 'refunded' | null
           created_at: string
+          updated_at: string | null
         }
         Insert: {
           id?: string
@@ -65,7 +85,12 @@ export interface Database {
           time_slot: string
           package_type: string
           package_price: number
+          experience_tier?: string | null
+          status?: 'pending' | 'confirmed' | 'paid' | 'cancelled' | 'completed'
+          payment_intent_id?: string | null
+          payment_status?: 'pending' | 'succeeded' | 'failed' | 'refunded' | null
           created_at?: string
+          updated_at?: string | null
         }
         Update: {
           id?: string
@@ -76,7 +101,12 @@ export interface Database {
           time_slot?: string
           package_type?: string
           package_price?: number
+          experience_tier?: string | null
+          status?: 'pending' | 'confirmed' | 'paid' | 'cancelled' | 'completed'
+          payment_intent_id?: string | null
+          payment_status?: 'pending' | 'succeeded' | 'failed' | 'refunded' | null
           created_at?: string
+          updated_at?: string | null
         }
       }
       featured_properties: {
