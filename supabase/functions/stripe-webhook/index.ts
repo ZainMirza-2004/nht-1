@@ -101,7 +101,9 @@ async function sendConfirmationEmail(
     }
 
     console.log(`📧 Attempting to send confirmation email for booking ${bookingData.id} (${serviceType})`);
-    console.log(`📧 Email recipient: ${bookingData.email}`);
+    // Redact email for privacy (only show first 2 chars and domain)
+    const redactedEmail = bookingData.email.replace(/(.{2})(.*)(@.*)/, '$1***$3');
+    console.log(`📧 Email recipient: ${redactedEmail}`);
 
     // Map database fields to email function format
     const emailPayload: any = {
@@ -122,7 +124,9 @@ async function sendConfirmationEmail(
     }
 
     console.log(`📧 Calling email function: ${supabaseUrl}/functions/v1/send-booking-confirmation`);
-    console.log(`📧 Email payload:`, JSON.stringify(emailPayload, null, 2));
+    // Redact email in payload logging for privacy
+    const sanitizedPayload = { ...emailPayload, email: emailPayload.email.replace(/(.{2})(.*)(@.*)/, '$1***$3') };
+    console.log(`📧 Email payload (sanitized):`, JSON.stringify(sanitizedPayload, null, 2));
 
     const emailUrl = `${supabaseUrl}/functions/v1/send-booking-confirmation`;
     const response = await fetch(emailUrl, {

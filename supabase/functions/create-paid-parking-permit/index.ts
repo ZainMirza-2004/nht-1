@@ -25,6 +25,60 @@ Deno.serve(async (req: Request) => {
   try {
     const data = await req.json();
 
+    // SECURITY: Validate and sanitize input data
+    if (!data.fullName || !data.email || !data.permitDate) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Missing required fields: fullName, email, and permitDate are required" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Validate email format
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (!emailRegex.test(data.email)) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Invalid email format" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Validate permit date
+    const permitDate = new Date(data.permitDate);
+    if (isNaN(permitDate.getTime())) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Invalid permit date format" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Validate number of nights
+    const numberOfNights = parseInt(data.numberOfNights) || 1;
+    if (numberOfNights < 1 || numberOfNights > 365) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Number of nights must be between 1 and 365" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Sanitize and limit text field lengths
+    const fullName = data.fullName.trim().substring(0, 100);
+    const email = data.email.trim().toLowerCase();
+    const vehicleMake = data.vehicleMake?.trim().substring(0, 50) || null;
+    const registration = data.registration?.trim().substring(0, 20).toUpperCase().replace(/\s+/g, '') || null;
+    const propertyName = data.propertyName?.trim().substring(0, 100) || null;
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
     
@@ -43,19 +97,19 @@ Deno.serve(async (req: Request) => {
     // Generate unique permit ID
     const permitId = generatePermitId();
 
-    // Create permit record
+    // Create permit record with sanitized data
     const { data: permit, error: insertError } = await supabase
       .from("parking_permit_requests")
       .insert({
-        full_name: data.fullName,
-        email: data.email,
+        full_name: fullName,
+        email: email,
         phone: data.phone || null,
-        vehicle_make: data.vehicleMake,
-        registration: data.registration,
-        property_name: data.propertyName,
+        vehicle_make: vehicleMake,
+        registration: registration,
+        property_name: propertyName,
         permit_type: "paid",
-        permit_date: data.permitDate,
-        number_of_nights: data.numberOfNights,
+        permit_date: permitDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
+        number_of_nights: numberOfNights,
         permit_id: permitId,
         status: "approved", // Paid permits are auto-approved
         approved_at: new Date().toISOString(),

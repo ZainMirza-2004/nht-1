@@ -2,8 +2,45 @@
 ALTER TABLE parking_permit_requests
   ADD COLUMN IF NOT EXISTS phone TEXT,
   ADD COLUMN IF NOT EXISTS permit_id TEXT UNIQUE,
-  ADD COLUMN IF NOT EXISTS number_of_nights INTEGER DEFAULT 1,
-  ADD COLUMN IF NOT EXISTS permit_type TEXT DEFAULT 'full_day' CHECK (permit_type IN ('time_slot', 'full_day', 'free', 'paid'));
+  ADD COLUMN IF NOT EXISTS number_of_nights INTEGER DEFAULT 1;
+
+-- Update permit_type constraint to include 'free' and 'paid'
+-- First drop existing constraint if it exists
+DO $$
+BEGIN
+  -- Drop old constraint if it exists
+  IF EXISTS (
+    SELECT 1 FROM information_schema.table_constraints 
+    WHERE constraint_name = 'parking_permit_requests_permit_type_check'
+    AND table_name = 'parking_permit_requests'
+  ) THEN
+    ALTER TABLE parking_permit_requests 
+    DROP CONSTRAINT parking_permit_requests_permit_type_check;
+  END IF;
+END $$;
+
+-- Add permit_type column if it doesn't exist, or update constraint if it does
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'parking_permit_requests' 
+    AND column_name = 'permit_type'
+  ) THEN
+    -- Column doesn't exist, add it with new constraint
+    ALTER TABLE parking_permit_requests 
+    ADD COLUMN permit_type TEXT NOT NULL DEFAULT 'full_day';
+  END IF;
+  
+  -- Add the updated constraint (includes 'free' and 'paid')
+  ALTER TABLE parking_permit_requests
+    ADD CONSTRAINT parking_permit_requests_permit_type_check 
+    CHECK (permit_type IN ('time_slot', 'full_day', 'free', 'paid'));
+EXCEPTION
+  WHEN duplicate_object THEN
+    -- Constraint already exists, that's fine
+    NULL;
+END $$;
 
 -- Create index for permit_id lookups
 CREATE INDEX IF NOT EXISTS idx_parking_permit_requests_permit_id ON parking_permit_requests(permit_id);

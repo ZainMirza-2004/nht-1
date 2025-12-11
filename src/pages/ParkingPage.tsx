@@ -259,29 +259,34 @@ export default function ParkingPage() {
       const result = await response.json();
       
       setShowStripeCheckout(false);
+      
+      // Build confirmation URL with all necessary data
+      const confirmationUrl = new URL('/booking-confirmation', window.location.origin);
+      confirmationUrl.searchParams.set('serviceType', 'parking');
+      
+      // Use database ID if available, otherwise use permitId
+      if (result.id) {
+        confirmationUrl.searchParams.set('bookingId', result.id);
+      } else if (result.permitId) {
+        confirmationUrl.searchParams.set('permitId', result.permitId);
+      }
+      
+      // Add permit details to URL as fallback (in case database lookup fails)
+      if (pendingPermitData) {
+        confirmationUrl.searchParams.set('fullName', encodeURIComponent(pendingPermitData.fullName || ''));
+        confirmationUrl.searchParams.set('email', encodeURIComponent(pendingPermitData.email || ''));
+        confirmationUrl.searchParams.set('propertyName', encodeURIComponent(pendingPermitData.propertyName || ''));
+        confirmationUrl.searchParams.set('permitDate', encodeURIComponent(pendingPermitData.permitDate || ''));
+        confirmationUrl.searchParams.set('numberOfNights', String(pendingPermitData.numberOfNights || 1));
+        if (result.permitId) {
+          confirmationUrl.searchParams.set('permitId', result.permitId);
+        }
+      }
+      
       setPendingPermitData(null);
       
-      // Redirect to confirmation page with database ID
-      if (result.id) {
-        window.location.href = `/booking-confirmation?bookingId=${result.id}&serviceType=parking`;
-      } else if (result.permitId) {
-        // Fallback to permitId if id not available
-        window.location.href = `/booking-confirmation?permitId=${result.permitId}&serviceType=parking`;
-      } else {
-        setSubmitStatus('success');
-        // Reset form
-        setFormData({
-          fullName: '',
-          email: '',
-          phone: '',
-          vehicleMake: '',
-          registration: '',
-          propertyName: '',
-          permitType: 'free',
-          permitDate: '',
-          numberOfNights: 1,
-        });
-      }
+      // Redirect to confirmation page
+      window.location.href = confirmationUrl.toString();
     } catch (error: any) {
       setErrorMessage(error.message || 'Failed to create permit');
       setSubmitStatus('error');
@@ -289,7 +294,7 @@ export default function ParkingPage() {
     }
   };
 
-  const totalPrice = formData.permitType === 'paid' ? formData.numberOfNights * 5 : 0;
+  const totalPrice = formData.permitType === 'paid' ? formData.numberOfNights * 1 : 0;
 
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-stone-50 via-white to-stone-50">
@@ -630,7 +635,7 @@ export default function ParkingPage() {
                   href="tel:+441234567890"
                   className="text-lg text-gray-900 hover:text-amber-700 font-light transition-colors duration-300 flex items-center justify-center gap-2"
                 >
-                  +44 1234 567890
+                  +44 7767 992108
                   <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                   </svg>
@@ -660,6 +665,16 @@ export default function ParkingPage() {
         }}
         amount={totalPrice}
         serviceType="parking"
+        bookingId={pendingPermitData ? JSON.stringify({
+          fullName: pendingPermitData.fullName,
+          email: pendingPermitData.email,
+          phone: pendingPermitData.phone,
+          vehicleMake: pendingPermitData.vehicleMake,
+          registration: pendingPermitData.registration,
+          propertyName: pendingPermitData.propertyName,
+          permitDate: pendingPermitData.permitDate,
+          numberOfNights: pendingPermitData.numberOfNights,
+        }) : undefined}
         customerName={pendingPermitData?.fullName}
         customerEmail={pendingPermitData?.email}
         onSuccess={handlePaidPermitSuccess}

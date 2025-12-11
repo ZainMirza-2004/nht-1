@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CheckCircle2, Calendar, Clock, MapPin, Mail, Phone } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -28,8 +28,16 @@ export default function BookingConfirmationPage() {
   const [loading, setLoading] = useState(true);
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const permitCreationAttempted = useRef(false); // Prevent duplicate permit creation
+  const dataFetched = useRef(false); // Prevent useEffect from running multiple times
 
   useEffect(() => {
+    // Prevent multiple executions
+    if (dataFetched.current) {
+      return;
+    }
+    dataFetched.current = true;
+
     const fetchBookingData = async () => {
       try {
         const bookingId = searchParams.get('bookingId');
@@ -62,6 +70,17 @@ export default function BookingConfirmationPage() {
         
         let data: SpaBooking | CinemaBooking | ParkingPermit | null = null;
         let fetchError: any = null;
+        let permitDataFromBookingId: any = null; // Declare outside to use in fallback
+
+        // Check if bookingId is JSON (for parking permits)
+        if (serviceType === 'parking' && bookingId) {
+          try {
+            permitDataFromBookingId = JSON.parse(bookingId);
+          } catch {
+            // Not JSON, treat as regular bookingId
+            permitDataFromBookingId = null;
+          }
+        }
 
         if (serviceType === 'spa') {
           if (!bookingId) {
@@ -90,6 +109,17 @@ export default function BookingConfirmationPage() {
           data = result.data as CinemaBooking | null;
           fetchError = result.error;
         } else if (serviceType === 'parking') {
+          // Check if bookingId is JSON (permit data passed from Stripe)
+          let permitDataFromBookingId: any = null;
+          if (bookingId) {
+            try {
+              permitDataFromBookingId = JSON.parse(bookingId);
+            } catch {
+              // Not JSON, treat as regular bookingId
+              permitDataFromBookingId = null;
+            }
+          }
+
           if (permitId) {
             const result = await supabase
               .from('parking_permit_requests')
@@ -98,7 +128,8 @@ export default function BookingConfirmationPage() {
               .single();
             data = result.data as ParkingPermit | null;
             fetchError = result.error;
-          } else if (bookingId) {
+          } else if (bookingId && !permitDataFromBookingId) {
+            // Regular bookingId - try to find permit
             const result = await supabase
               .from('parking_permit_requests')
               .select('*')
@@ -106,6 +137,143 @@ export default function BookingConfirmationPage() {
               .single();
             data = result.data as ParkingPermit | null;
             fetchError = result.error;
+          } else if (permitDataFromBookingId) {
+            // bookingId contains permit data - check if permit already exists first
+            // This prevents duplicate permit creation and duplicate emails
+            
+            // First, try to find existing permit by email and date
+            const existingPermitResult = await supabase
+              .from('parking_permit_requests')
+              .select('*')
+              .eq('email', permitDataFromBookingId.email)
+              .eq('permit_date', permitDataFromBookingId.permitDate)
+              .eq('permit_type', 'paid')
+              .order('created_at', { ascending: false })
+              .limit(1);
+            
+            if (existingPermitResult.data && existingPermitResult.data.length > 0) {
+              // Permit already exists - use it
+              console.log('✅ Permit already exists, using existing permit');
+              data = existingPermitResult.data[0] as ParkingPermit;
+              fetchError = null;
+            } else if (!permitCreationAttempted.current) {
+              // Permit doesn't exist and we haven't tried to create it yet - create it
+              permitCreationAttempted.current = true; // Mark as attempted to prevent duplicates
+              
+              try {
+                const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+                if (!supabaseUrl || supabaseUrl.includes('placeholder')) {
+                  throw new Error('Supabase not configured');
+                }
+
+                // Format phone number
+                const formattedPhone = permitDataFromBookingId.phone 
+                  ? permitDataFromBookingId.phone.startsWith('+') 
+                    ? permitDataFromBookingId.phone 
+                    : `+44${permitDataFromBookingId.phone.replace(/\D/g, '')}`
+                  : '';
+
+                console.log('📝 Creating paid parking permit (first attempt)...');
+                const response = await fetch(`${supabaseUrl}/functions/v1/create-paid-parking-permit`, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    fullName: permitDataFromBookingId.fullName,
+                    email: permitDataFromBookingId.email,
+                    phone: formattedPhone,
+                    vehicleMake: permitDataFromBookingId.vehicleMake,
+                    registration: permitDataFromBookingId.registration,
+                    propertyName: permitDataFromBookingId.propertyName,
+                    permitDate: permitDataFromBookingId.permitDate,
+                    numberOfNights: permitDataFromBookingId.numberOfNights,
+                  }),
+                });
+
+                if (!response.ok) {
+                  throw new Error('Failed to create permit');
+                }
+
+                const result = await response.json();
+                console.log('✅ Permit created successfully:', result.id || result.permitId);
+                
+                // Now fetch the created permit
+                if (result.id) {
+                  const fetchResult = await supabase
+                    .from('parking_permit_requests')
+                    .select('*')
+                    .eq('id', result.id)
+                    .single();
+                  data = fetchResult.data as ParkingPermit | null;
+                  fetchError = fetchResult.error;
+                } else if (result.permitId) {
+                  const fetchResult = await supabase
+                    .from('parking_permit_requests')
+                    .select('*')
+                    .eq('permit_id', result.permitId)
+                    .single();
+                  data = fetchResult.data as ParkingPermit | null;
+                  fetchError = fetchResult.error;
+                } else {
+                  // Permit created but no ID - use permit data from JSON as fallback
+                  console.warn('Permit created but ID not returned, using permit data from URL');
+                  const fallbackData: ParkingPermit = {
+                    id: 'pending',
+                    full_name: permitDataFromBookingId.fullName,
+                    email: permitDataFromBookingId.email,
+                    phone: permitDataFromBookingId.phone || null,
+                    permit_date: permitDataFromBookingId.permitDate,
+                    permit_id: undefined,
+                    property_name: permitDataFromBookingId.propertyName,
+                    vehicle_make: permitDataFromBookingId.vehicleMake,
+                    registration: permitDataFromBookingId.registration,
+                    number_of_nights: permitDataFromBookingId.numberOfNights || 1,
+                  };
+                  data = fallbackData;
+                  fetchError = null;
+                }
+              } catch (createError: any) {
+                console.error('Error creating permit:', createError);
+                // If creation failed, use permit data from JSON as fallback
+                if (permitDataFromBookingId) {
+                  const fallbackData: ParkingPermit = {
+                    id: 'pending',
+                    full_name: permitDataFromBookingId.fullName,
+                    email: permitDataFromBookingId.email,
+                    phone: permitDataFromBookingId.phone || null,
+                    permit_date: permitDataFromBookingId.permitDate,
+                    permit_id: undefined,
+                    property_name: permitDataFromBookingId.propertyName,
+                    vehicle_make: permitDataFromBookingId.vehicleMake,
+                    registration: permitDataFromBookingId.registration,
+                    number_of_nights: permitDataFromBookingId.numberOfNights || 1,
+                  };
+                  data = fallbackData;
+                  fetchError = null;
+                } else {
+                  fetchError = createError;
+                }
+              }
+            } else {
+              // Already attempted to create - use permit data from JSON as fallback
+              console.log('⚠️ Permit creation already attempted, using permit data from URL');
+              const fallbackData: ParkingPermit = {
+                id: 'pending',
+                full_name: permitDataFromBookingId.fullName,
+                email: permitDataFromBookingId.email,
+                phone: permitDataFromBookingId.phone || null,
+                permit_date: permitDataFromBookingId.permitDate,
+                permit_id: undefined,
+                property_name: permitDataFromBookingId.propertyName,
+                vehicle_make: permitDataFromBookingId.vehicleMake,
+                registration: permitDataFromBookingId.registration,
+                number_of_nights: permitDataFromBookingId.numberOfNights || 1,
+              };
+              data = fallbackData;
+              fetchError = null;
+            }
           } else {
             setError('Missing booking identifier');
             setLoading(false);
@@ -113,10 +281,56 @@ export default function BookingConfirmationPage() {
           }
         }
 
+        // If database lookup failed, try to use permit data from JSON or URL parameters as fallback
         if (fetchError || !data) {
-          setError('Booking not found');
-          setLoading(false);
-          return;
+          if (serviceType === 'parking') {
+            // First, try to use permit data from JSON (if bookingId was JSON)
+            if (permitDataFromBookingId) {
+              const fallbackData: ParkingPermit = {
+                id: 'pending',
+                full_name: permitDataFromBookingId.fullName,
+                email: permitDataFromBookingId.email,
+                phone: permitDataFromBookingId.phone || null,
+                permit_date: permitDataFromBookingId.permitDate,
+                permit_id: undefined,
+                property_name: permitDataFromBookingId.propertyName,
+                vehicle_make: permitDataFromBookingId.vehicleMake,
+                registration: permitDataFromBookingId.registration,
+                number_of_nights: permitDataFromBookingId.numberOfNights || 1,
+              };
+              data = fallbackData;
+            } else {
+              // Try URL parameters as fallback
+              const fullName = searchParams.get('fullName');
+              const email = searchParams.get('email');
+              const propertyName = searchParams.get('propertyName');
+              const permitDate = searchParams.get('permitDate');
+              const numberOfNights = searchParams.get('numberOfNights');
+              const permitIdFromUrl = searchParams.get('permitId');
+              
+              if (fullName && email && permitDate) {
+                // We have enough info from URL, create a fallback data object
+                const fallbackData: ParkingPermit = {
+                  id: bookingId || permitIdFromUrl || 'pending',
+                  full_name: decodeURIComponent(fullName),
+                  email: decodeURIComponent(email),
+                  permit_date: permitDate,
+                  permit_id: permitIdFromUrl || undefined,
+                  property_name: propertyName ? decodeURIComponent(propertyName) : undefined,
+                  number_of_nights: numberOfNights ? parseInt(numberOfNights) : 1,
+                };
+                data = fallbackData;
+              } else {
+                setError('Booking not found. Please check your confirmation email for details.');
+                setLoading(false);
+                return;
+              }
+            }
+          } else {
+            setError('Booking not found');
+            setLoading(false);
+            return;
+          }
         }
 
         // Type guard: data is now guaranteed to be non-null
@@ -139,7 +353,11 @@ export default function BookingConfirmationPage() {
             ? undefined 
             : (bookingData as SpaBooking | CinemaBooking).package_type || undefined,
           packagePrice: serviceType === 'parking' 
-            ? undefined 
+            ? (() => {
+                // For paid parking permits, calculate price: £1 per night
+                const nights = (bookingData as ParkingPermit).number_of_nights || 1;
+                return nights * 1; // £1 per night
+              })()
             : (bookingData as SpaBooking | CinemaBooking).package_price || undefined,
           experienceTier: serviceType === 'parking' 
             ? undefined 
@@ -376,6 +594,21 @@ export default function BookingConfirmationPage() {
               </div>
             )}
 
+            {/* Location (for Spa and Cinema only) */}
+            {(bookingData.serviceType === 'spa' || bookingData.serviceType === 'cinema') && (
+              <div className="flex items-start gap-4 pb-6 border-b border-gray-100">
+                <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-6 h-6 text-blue-900" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-500 font-medium mb-1">Location</p>
+                  <p className="text-lg text-gray-900 font-light">
+                    {bookingData.serviceType === 'spa' ? 'CF24 3AF, 16, The Walk' : 'CF24 3AF, 16, The Cinema'}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Parking Permit Details */}
             {bookingData.serviceType === 'parking' && (
               <>
@@ -486,7 +719,7 @@ export default function BookingConfirmationPage() {
               </div>
             </a>
             <a
-              href="tel:+441234567890"
+              href="tel:+447767992108"
               className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 hover:border-blue-900 hover:bg-blue-50 transition-all group"
             >
               <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
@@ -494,7 +727,7 @@ export default function BookingConfirmationPage() {
               </div>
               <div>
                 <p className="text-sm text-gray-500 font-medium mb-1">Phone</p>
-                <p className="text-gray-900 font-light">+44 1234 567890</p>
+                <p className="text-gray-900 font-light">+44 7767 992108</p>
               </div>
             </a>
           </div>

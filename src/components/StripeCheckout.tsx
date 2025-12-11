@@ -63,7 +63,7 @@ function CheckoutForm({
       return;
     }
 
-    // Build return URL with booking info
+    // Always use return_url - Stripe needs it for 3D Secure and other payment methods
     const returnUrl = new URL(`${window.location.origin}/payment-success`);
     if (bookingId) {
       returnUrl.searchParams.set('bookingId', bookingId);
@@ -88,10 +88,9 @@ function CheckoutForm({
     if (paymentError) {
       setError(paymentError.message || 'Payment failed');
       setIsProcessing(false);
-    } else {
-      // Payment succeeded
-      onSuccess();
     }
+    // Note: If payment succeeds, Stripe will redirect to return_url
+    // We don't call onSuccess here because Stripe handles the redirect
   };
 
   return (

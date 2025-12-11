@@ -298,6 +298,10 @@ Deno.serve(async (req: Request) => {
           <span class="detail-value">${timeSlot}</span>
         </div>
         <div class="detail-row">
+          <span class="detail-label">Location:</span>
+          <span class="detail-value">${serviceType === 'spa' ? 'CF24 3AF, 16, The Walk' : 'CF24 3AF, 16, The Cinema'}</span>
+        </div>
+        <div class="detail-row">
           <span class="detail-label">Price:</span>
           <span class="detail-value">£${packagePrice}</span>
         </div>
@@ -348,7 +352,9 @@ Deno.serve(async (req: Request) => {
     
     if (RESEND_API_KEY) {
       try {
-        console.log("Attempting to send email via Resend to:", email);
+        // Redact email for privacy (only show first 2 chars and domain)
+        const redactedEmail = email.replace(/(.{2})(.*)(@.*)/, '$1***$3');
+        console.log("Attempting to send email via Resend to:", redactedEmail);
         
         // Send confirmation email to customer
         const resendResponse = await fetch("https://api.resend.com/emails", {
@@ -490,6 +496,10 @@ Deno.serve(async (req: Request) => {
             <span class="detail-value"><strong>${timeSlot}</strong></span>
           </div>
           <div class="detail-row">
+            <span class="detail-label">Location:</span>
+            <span class="detail-value"><strong>${serviceType === 'spa' ? 'CF24 3AF, 16, The Walk' : 'CF24 3AF, 16, The Cinema'}</strong></span>
+          </div>
+          <div class="detail-row">
             <span class="detail-label">End Time (approx.):</span>
             <span class="detail-value">${(() => {
               const [year, month, day] = bookingDate.split('-').map(Number);
@@ -570,11 +580,13 @@ Deno.serve(async (req: Request) => {
       }
     } else {
       console.warn("RESEND_API_KEY not configured. Email not sent. Configure Resend API key in Supabase Edge Functions secrets to enable email sending.");
-      console.log("Email that would be sent:", {
-        to: email,
+      // Sanitize email payload before logging
+      const sanitizedEmailPayload = {
+        to: email ? email.replace(/(.{2})(.*)(@.*)/, '$1***$3') : email,
         subject: subject,
         bookingId: bookingId,
-      });
+      };
+      console.log("Email that would be sent (sanitized):", sanitizedEmailPayload);
     }
     
     // If email service is not configured, we still return success

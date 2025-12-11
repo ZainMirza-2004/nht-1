@@ -735,7 +735,7 @@ export default function CinemaPage() {
                 href="tel:+441234567890" 
                 className="text-lg text-gray-900 hover:text-amber-700 font-light transition-colors duration-300 flex items-center gap-2"
               >
-                +44 1234 567890
+                +44 7767 992108
                 <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                 </svg>

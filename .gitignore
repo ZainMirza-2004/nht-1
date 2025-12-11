@@ -21,3 +21,26 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Documentation files (keep locally, don't push to GitHub)
+*.md
+!README.md
+
+# Deployment scripts (keep locally)
+*.sh
+deploy-*.sh
+test-*.sh
+execute-*.sh
+run-*.sh
+auto-*.sh
+
+# SQL files (keep migrations, exclude other SQL files)
+MIGRATION_SQL.txt
+check-migrations.sql
+run-migration*.sql
+!supabase/migrations/*.sql
+
+# Temporary/backup files
+*.bak
+*.tmp
+*.backup
