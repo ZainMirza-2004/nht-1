@@ -394,41 +394,51 @@ export default function HomePage() {
               <LoadingSpinner size="lg" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {properties.map((property) => (
-                <a
-                  key={property.id}
-                  href="https://nhtestates.bookeddirectly.com/g"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
-                >
-                  <div className="relative h-64 overflow-hidden">
-                    <img
-                      src={property.image_url}
-                      alt={property.title}
-                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute top-4 right-4 bg-white px-4 py-2 rounded-full shadow-lg">
-                      <span className="text-blue-900 font-serif font-semibold">£{property.price_per_night}/night</span>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                {properties.map((property) => (
+                  <a
+                    key={property.id}
+                    href="https://nhtestates.bookeddirectly.com/g"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
+                  >
+                    <div className="relative h-64 overflow-hidden">
+                      <img
+                        src={property.image_url}
+                        alt={property.title}
+                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute top-4 right-4 bg-white px-4 py-2 rounded-full shadow-lg">
+                        <span className="text-blue-900 font-serif font-semibold">£{property.price_per_night}/night</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-serif text-gray-900 mb-2 group-hover:text-blue-900 transition-colors">
-                      {property.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4">{property.location}</p>
-                    <p className="text-gray-700 leading-relaxed mb-4 line-clamp-2">
-                      {property.description}
-                    </p>
-                    <div className="flex items-center justify-between text-sm text-gray-600">
-                      <span>{property.bedrooms} Bedrooms</span>
-                      <ChevronRight className="h-5 w-5 text-blue-900 transform group-hover:translate-x-1 transition-transform" />
+                    <div className="p-6">
+                      <h3 className="text-2xl font-serif text-gray-900 mb-2 group-hover:text-blue-900 transition-colors">
+                        {property.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-4">{property.location}</p>
+                      <p className="text-gray-700 leading-relaxed mb-4 line-clamp-2">
+                        {property.description}
+                      </p>
+                      <div className="flex items-center justify-between text-sm text-gray-600">
+                        <span>{property.bedrooms} Bedrooms</span>
+                        <ChevronRight className="h-5 w-5 text-blue-900 transform group-hover:translate-x-1 transition-transform" />
+                      </div>
                     </div>
-                  </div>
-                </a>
-              ))}
-            </div>
+                  </a>
+                ))}
+              </div>
+              <div className="text-center">
+                <Link to="/properties">
+                  <Button size="lg" className="mx-auto">
+                    Explore All Properties
+                    <ChevronRight className="inline ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+            </>
           )}
         </div>
       </section>

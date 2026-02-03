@@ -10,6 +10,7 @@ import ParkingPage from './pages/ParkingPage';
 import BlogPage from './pages/BlogPage';
 import BlogPostPage from './pages/BlogPostPage';
 import BookingConfirmationPage from './pages/BookingConfirmationPage';
+import ExploreAllProperties from './pages/ExploreAllProperties';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/parking" element={<ParkingPage />} />
                 <Route path="/blog" element={<BlogPage />} />
                 <Route path="/blog/:id" element={<BlogPostPage />} />
+                <Route path="/properties" element={<ExploreAllProperties />} />
                 <Route path="/payment-success" element={<BookingConfirmationPage />} />
                 <Route path="/booking-confirmation" element={<BookingConfirmationPage />} />
               </Routes>
