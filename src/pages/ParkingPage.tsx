@@ -1,11 +1,11 @@
-import { useState, FormEvent } from 'react';
+import { lazy, Suspense, useState, FormEvent } from 'react';
 import { Car } from 'lucide-react';
 import Input from '../components/Input';
 import LoadingSpinner from '../components/LoadingSpinner';
 import DatePicker from '../components/DatePicker';
 import HierarchicalPropertySelect from '../components/HierarchicalPropertySelect';
 import OTPVerificationModal from '../components/OTPVerificationModal';
-import StripeCheckout from '../components/StripeCheckout';
+const StripeCheckout = lazy(() => import('../components/StripeCheckout'));
 import { formatPhoneToE164, formatPhoneForDisplay, getPhoneValidationError } from '../lib/phone-utils';
 
 type PermitType = 'free' | 'paid';
@@ -657,28 +657,36 @@ export default function ParkingPage() {
         onResend={handleOTPRequest}
       />
 
-      <StripeCheckout
-        isOpen={showStripeCheckout}
-        onClose={() => {
-          setShowStripeCheckout(false);
-          setPendingPermitData(null);
-        }}
-        amount={totalPrice}
-        serviceType="parking"
-        bookingId={pendingPermitData ? JSON.stringify({
-          fullName: pendingPermitData.fullName,
-          email: pendingPermitData.email,
-          phone: pendingPermitData.phone,
-          vehicleMake: pendingPermitData.vehicleMake,
-          registration: pendingPermitData.registration,
-          propertyName: pendingPermitData.propertyName,
-          permitDate: pendingPermitData.permitDate,
-          numberOfNights: pendingPermitData.numberOfNights,
-        }) : undefined}
-        customerName={pendingPermitData?.fullName}
-        customerEmail={pendingPermitData?.email}
-        onSuccess={handlePaidPermitSuccess}
-      />
+      {showStripeCheckout && (
+        <Suspense fallback={null}>
+          <StripeCheckout
+            isOpen={showStripeCheckout}
+            onClose={() => {
+              setShowStripeCheckout(false);
+              setPendingPermitData(null);
+            }}
+            amount={totalPrice}
+            serviceType="parking"
+            bookingId={
+              pendingPermitData
+                ? JSON.stringify({
+                    fullName: pendingPermitData.fullName,
+                    email: pendingPermitData.email,
+                    phone: pendingPermitData.phone,
+                    vehicleMake: pendingPermitData.vehicleMake,
+                    registration: pendingPermitData.registration,
+                    propertyName: pendingPermitData.propertyName,
+                    permitDate: pendingPermitData.permitDate,
+                    numberOfNights: pendingPermitData.numberOfNights,
+                  })
+                : undefined
+            }
+            customerName={pendingPermitData?.fullName}
+            customerEmail={pendingPermitData?.email}
+            onSuccess={handlePaidPermitSuccess}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

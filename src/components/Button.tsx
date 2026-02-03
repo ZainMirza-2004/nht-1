@@ -13,6 +13,7 @@ export default function Button({
   size = 'md',
   fullWidth = false,
   className = '',
+  style,
   ...props
 }: ButtonProps) {
   const baseStyles = 'font-medium rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100';
@@ -20,7 +21,7 @@ export default function Button({
   const variants = {
     primary: 'bg-blue-900 text-white hover:bg-blue-800 shadow-lg hover:shadow-xl',
     secondary: 'bg-gray-800 text-white hover:bg-gray-700 shadow-lg hover:shadow-xl',
-    outline: 'border-2 border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white',
+    outline: 'border-2 border-blue-900 text-blue-900 hover:bg-blue-900',
   };
 
   const sizes = {
@@ -33,6 +34,7 @@ export default function Button({
 
   return (
     <button
+      style={style}
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${widthClass} ${className}`}
       {...props}
     >

@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { lazy, Suspense, useState, useEffect, FormEvent } from 'react';
 import { Clock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
@@ -9,7 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import SuccessModal from '../components/SuccessModal';
 import DatePicker from '../components/DatePicker';
 import ExperienceTierSelector, { type ExperienceTier, type TierOption } from '../components/ExperienceTierSelector';
-import StripeCheckout from '../components/StripeCheckout';
+const StripeCheckout = lazy(() => import('../components/StripeCheckout'));
 
 type CinemaBookingRow = Database['public']['Tables']['cinema_bookings']['Row'];
 type CinemaBookingSelect = Pick<CinemaBookingRow, 'time_slot' | 'package_type' | 'experience_tier'>;
@@ -422,7 +422,7 @@ export default function CinemaPage() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(/cinema.jpg)',
+            backgroundImage: 'url(/cinema.webp)',
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/60" />
@@ -632,67 +632,71 @@ export default function CinemaPage() {
         </section>
       )}
 
-      <StripeCheckout
-        isOpen={showStripeCheckout}
-        onClose={() => {
-          setShowStripeCheckout(false);
-          setPendingBookingId(null);
-        }}
-        amount={selectedTierDetails?.price || 0}
-        serviceType="cinema"
-        bookingId={pendingBookingId || undefined}
-        customerName={formData.fullName}
-        customerEmail={formData.email}
-        onSuccess={async () => {
-          setShowStripeCheckout(false);
-          
-          // Send confirmation email
-          const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-          if (supabaseUrl && !supabaseUrl.includes('placeholder') && pendingBookingId) {
-            try {
-              const emailApiUrl = `${supabaseUrl}/functions/v1/send-booking-confirmation`;
-              await fetch(emailApiUrl, {
-                method: 'POST',
-                headers: {
-                  'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  serviceType: 'cinema',
-                  bookingId: pendingBookingId,
-                  fullName: formData.fullName,
-                  email: formData.email,
-                  phone: formData.phone,
-                  bookingDate: formData.date,
-                  timeSlot: formData.timeSlot,
-                  packageType: tierToPackageName[selectedTier!],
-                  packagePrice: selectedTierDetails?.price,
-                  experienceTier: selectedTier,
-                }),
-              });
-            } catch (emailError: any) {
-              console.warn('Email sending failed:', emailError.message);
-            }
-          }
+      {showStripeCheckout && (
+        <Suspense fallback={null}>
+          <StripeCheckout
+            isOpen={showStripeCheckout}
+            onClose={() => {
+              setShowStripeCheckout(false);
+              setPendingBookingId(null);
+            }}
+            amount={selectedTierDetails?.price || 0}
+            serviceType="cinema"
+            bookingId={pendingBookingId || undefined}
+            customerName={formData.fullName}
+            customerEmail={formData.email}
+            onSuccess={async () => {
+              setShowStripeCheckout(false);
 
-          setSubmitStatus('success');
-          setErrorMessage('');
-          
-          setFormData({
-            fullName: '',
-            email: '',
-            phone: '',
-            date: '',
-            timeSlot: '',
-          });
-          
-          if (formData.date) {
-            fetchUnavailableSlots(formData.date);
-          }
-          
-          setPendingBookingId(null);
-        }}
-      />
+              // Send confirmation email
+              const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+              if (supabaseUrl && !supabaseUrl.includes("placeholder") && pendingBookingId) {
+                try {
+                  const emailApiUrl = `${supabaseUrl}/functions/v1/send-booking-confirmation`;
+                  await fetch(emailApiUrl, {
+                    method: "POST",
+                    headers: {
+                      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      serviceType: "cinema",
+                      bookingId: pendingBookingId,
+                      fullName: formData.fullName,
+                      email: formData.email,
+                      phone: formData.phone,
+                      bookingDate: formData.date,
+                      timeSlot: formData.timeSlot,
+                      packageType: tierToPackageName[selectedTier!],
+                      packagePrice: selectedTierDetails?.price,
+                      experienceTier: selectedTier,
+                    }),
+                  });
+                } catch (emailError: any) {
+                  console.warn("Email sending failed:", emailError.message);
+                }
+              }
+
+              setSubmitStatus("success");
+              setErrorMessage("");
+
+              setFormData({
+                fullName: "",
+                email: "",
+                phone: "",
+                date: "",
+                timeSlot: "",
+              });
+
+              if (formData.date) {
+                fetchUnavailableSlots(formData.date);
+              }
+
+              setPendingBookingId(null);
+            }}
+          />
+        </Suspense>
+      )}
 
       <SuccessModal
         isOpen={submitStatus === 'success'}
