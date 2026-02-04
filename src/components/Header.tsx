@@ -17,6 +17,7 @@ export default function Header() {
 
   const navLinks = [
     { to: '/', label: 'Home' },
+    { to: '/properties', label: 'Explore All' },
     { to: '/spa', label: 'Spa' },
     { to: '/cinema', label: 'Cinema' },
     { to: '/parking', label: 'Parking Permit' },

@@ -4,6 +4,24 @@ import { CheckCircle2, Calendar, Clock, MapPin, Mail, Phone } from 'lucide-react
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
 
+const setPageMeta = (title: string, description: string) => {
+  document.title = title;
+
+  const metaDescription = document.querySelector<HTMLMetaElement>(
+    'meta[name="description"]'
+  );
+
+  if (metaDescription) {
+    metaDescription.setAttribute('content', description);
+    return;
+  }
+
+  const meta = document.createElement('meta');
+  meta.name = 'description';
+  meta.content = description;
+  document.head.appendChild(meta);
+};
+
 interface BookingData {
   id: string;
   serviceType: 'spa' | 'cinema' | 'parking';
@@ -30,6 +48,13 @@ export default function BookingConfirmationPage() {
   const [error, setError] = useState<string | null>(null);
   const permitCreationAttempted = useRef(false); // Prevent duplicate permit creation
   const dataFetched = useRef(false); // Prevent useEffect from running multiple times
+
+  useEffect(() => {
+    setPageMeta(
+      'Booking Confirmed | NH&T Estates',
+      'Your booking has been confirmed. We look forward to hosting you at NH&T Estates.'
+    );
+  }, []);
 
   useEffect(() => {
     // Prevent multiple executions

@@ -7,6 +7,24 @@ import { supabase } from "../lib/supabase";
 import Button from "../components/Button";
 import LoadingSpinner from "../components/LoadingSpinner";
 
+const setPageMeta = (title: string, description: string) => {
+  document.title = title;
+
+  const metaDescription = document.querySelector<HTMLMetaElement>(
+    'meta[name="description"]'
+  );
+
+  if (metaDescription) {
+    metaDescription.setAttribute("content", description);
+    return;
+  }
+
+  const meta = document.createElement("meta");
+  meta.name = "description";
+  meta.content = description;
+  document.head.appendChild(meta);
+};
+
 /* =======================
    Types
 ======================= */
@@ -94,6 +112,13 @@ function HomePage() {
   }, []);
 
   useEffect(() => {
+    setPageMeta(
+      "NH&T Estates - Luxury Coastal Property Management",
+      "Experience unparalleled luxury with NH&T Estates. Premium coastal properties with world-class spa and cinema amenities."
+    );
+  }, []);
+
+  useEffect(() => {
     fetchProperties();
   }, [fetchProperties]);
 
@@ -155,7 +180,8 @@ function HomePage() {
               <LoadingSpinner size="lg" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {properties.map((p) => (
                 <a
                   key={p.id}
@@ -182,6 +208,14 @@ function HomePage() {
                   </div>
                 </a>
               ))}
+              </div>
+              <div className="mt-12 text-center">
+                <Link to="/properties">
+                  <Button size="lg" className="mx-auto">
+                    Explore All Properties <ChevronRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           )}
         </div>

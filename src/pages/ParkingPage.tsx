@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, FormEvent } from 'react';
+import { lazy, Suspense, useState, useEffect, FormEvent } from 'react';
 import { Car } from 'lucide-react';
 import Input from '../components/Input';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -10,6 +10,24 @@ import { formatPhoneToE164, formatPhoneForDisplay, getPhoneValidationError } fro
 
 type PermitType = 'free' | 'paid';
 
+const setPageMeta = (title: string, description: string) => {
+  document.title = title;
+
+  const metaDescription = document.querySelector<HTMLMetaElement>(
+    'meta[name="description"]'
+  );
+
+  if (metaDescription) {
+    metaDescription.setAttribute('content', description);
+    return;
+  }
+
+  const meta = document.createElement('meta');
+  meta.name = 'description';
+  meta.content = description;
+  document.head.appendChild(meta);
+};
+
 export default function ParkingPage() {
   const [loading, setLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -17,6 +35,13 @@ export default function ParkingPage() {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [showStripeCheckout, setShowStripeCheckout] = useState(false);
   const [pendingPermitData, setPendingPermitData] = useState<any>(null);
+
+  useEffect(() => {
+    setPageMeta(
+      'Parking & Transport | NH&T Estates',
+      'Seamless arrivals with valet, secure parking, and transport coordination for every stay.'
+    );
+  }, []);
 
   const [formData, setFormData] = useState({
     fullName: '',

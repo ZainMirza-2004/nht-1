@@ -11,6 +11,24 @@ import DatePicker from '../components/DatePicker';
 import ExperienceTierSelector, { type ExperienceTier, type TierOption } from '../components/ExperienceTierSelector';
 const StripeCheckout = lazy(() => import('../components/StripeCheckout'));
 
+const setPageMeta = (title: string, description: string) => {
+  document.title = title;
+
+  const metaDescription = document.querySelector<HTMLMetaElement>(
+    'meta[name="description"]'
+  );
+
+  if (metaDescription) {
+    metaDescription.setAttribute('content', description);
+    return;
+  }
+
+  const meta = document.createElement('meta');
+  meta.name = 'description';
+  meta.content = description;
+  document.head.appendChild(meta);
+};
+
 type SpaBookingRow = Database['public']['Tables']['spa_bookings']['Row'];
 type SpaBookingSelect = Pick<SpaBookingRow, 'time_slot' | 'package_type' | 'experience_tier'>;
 type SpaBookingWithDate = Pick<SpaBookingRow, 'booking_date' | 'time_slot' | 'package_type' | 'experience_tier'>;
@@ -78,6 +96,13 @@ const timeSlots = [
 
 export default function SpaPage() {
   const [selectedTier, setSelectedTier] = useState<ExperienceTier | null>('premium');
+
+  useEffect(() => {
+    setPageMeta(
+      'Luxurious Spa | NH&T Estates',
+      'Indulge in bespoke spa experiences with private suites, expert therapists, and curated wellness rituals.'
+    );
+  }, []);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [bookedSlots, setBookedSlots] = useState<Set<string>>(new Set());
   const [fullyBookedDates, setFullyBookedDates] = useState<Set<string>>(new Set());

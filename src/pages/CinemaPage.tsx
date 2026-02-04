@@ -11,6 +11,24 @@ import DatePicker from '../components/DatePicker';
 import ExperienceTierSelector, { type ExperienceTier, type TierOption } from '../components/ExperienceTierSelector';
 const StripeCheckout = lazy(() => import('../components/StripeCheckout'));
 
+const setPageMeta = (title: string, description: string) => {
+  document.title = title;
+
+  const metaDescription = document.querySelector<HTMLMetaElement>(
+    'meta[name="description"]'
+  );
+
+  if (metaDescription) {
+    metaDescription.setAttribute('content', description);
+    return;
+  }
+
+  const meta = document.createElement('meta');
+  meta.name = 'description';
+  meta.content = description;
+  document.head.appendChild(meta);
+};
+
 type CinemaBookingRow = Database['public']['Tables']['cinema_bookings']['Row'];
 type CinemaBookingSelect = Pick<CinemaBookingRow, 'time_slot' | 'package_type' | 'experience_tier'>;
 type CinemaBookingWithDate = Pick<CinemaBookingRow, 'booking_date' | 'time_slot' | 'package_type' | 'experience_tier'>;
@@ -98,6 +116,13 @@ export default function CinemaPage() {
     date: '',
     timeSlot: '',
   });
+
+  useEffect(() => {
+    setPageMeta(
+      'Private Cinema | NH&T Estates',
+      'Enjoy private cinema bookings with premium seating, immersive sound, and concierge-ready amenities.'
+    );
+  }, []);
 
   // Get selected tier details
   const selectedTierDetails = selectedTier ? cinemaTiers.find(t => t.id === selectedTier) : null;
