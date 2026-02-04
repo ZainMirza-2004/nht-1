@@ -4,6 +4,7 @@ import { Calendar, User, ArrowRight } from 'lucide-react';
 
 interface BlogPost {
   id: string;
+  slug: string;
   title: string;
   excerpt: string;
   content: string;
@@ -17,6 +18,7 @@ interface BlogPost {
 const blogPosts: BlogPost[] = [
   {
     id: '1',
+    slug: 'ultimate-guide-to-coastal-living',
     title: 'The Ultimate Guide to Coastal Living',
     excerpt: 'Discover the benefits of seaside living and why our coastal properties offer the perfect escape from city life.',
     content: 'Full article content here...',
@@ -28,6 +30,7 @@ const blogPosts: BlogPost[] = [
   },
   {
     id: '2',
+    slug: 'maximizing-your-spa-experience',
     title: 'Maximizing Your Spa Experience',
     excerpt: 'Expert tips on how to get the most out of your spa treatments and create a truly rejuvenating experience.',
     content: 'Full article content here...',
@@ -39,6 +42,7 @@ const blogPosts: BlogPost[] = [
   },
   {
     id: '3',
+    slug: 'creating-the-perfect-movie-night',
     title: 'Creating the Perfect Movie Night',
     excerpt: 'Transform your cinema experience with our curated guide to hosting an unforgettable private screening.',
     content: 'Full article content here...',
@@ -50,6 +54,7 @@ const blogPosts: BlogPost[] = [
   },
   {
     id: '4',
+    slug: 'sustainable-luxury-our-commitment',
     title: 'Sustainable Luxury: Our Commitment',
     excerpt: 'Learn about our initiatives to provide luxury experiences while maintaining environmental responsibility.',
     content: 'Full article content here...',
@@ -61,6 +66,7 @@ const blogPosts: BlogPost[] = [
   },
   {
     id: '5',
+    slug: 'top-5-beach-activities-near-our-properties',
     title: 'Top 5 Beach Activities Near Our Properties',
     excerpt: 'Explore the best coastal activities and hidden gems located near our luxury vacation rentals.',
     content: 'Full article content here...',
@@ -72,6 +78,7 @@ const blogPosts: BlogPost[] = [
   },
   {
     id: '6',
+    slug: 'interior-design-trends-in-luxury-homes',
     title: 'Interior Design Trends in Luxury Homes',
     excerpt: 'Discover the latest design trends that make our properties stand out from the ordinary.',
     content: 'Full article content here...',
@@ -157,7 +164,7 @@ export default function BlogPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {filteredPosts.length > 0 && (
             <Link
-              to={`/blog/${filteredPosts[0].id}`}
+              to={`/blog/${filteredPosts[0].slug}`}
               className="block mb-16 group"
             >
               <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
@@ -206,7 +213,7 @@ export default function BlogPage() {
             {filteredPosts.slice(1).map((post) => (
               <Link
                 key={post.id}
-                to={`/blog/${post.id}`}
+                to={`/blog/${post.slug}`}
                 className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
               >
                 <div className="relative h-56 overflow-hidden">

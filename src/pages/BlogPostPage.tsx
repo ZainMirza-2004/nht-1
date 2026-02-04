@@ -5,6 +5,7 @@ import { Calendar, User, ArrowLeft } from 'lucide-react';
 const blogPosts = [
   {
     id: '1',
+    slug: 'ultimate-guide-to-coastal-living',
     title: 'The Ultimate Guide to Coastal Living',
     author: 'Emily Hart',
     date: '2025-11-10',
@@ -30,6 +31,7 @@ const blogPosts = [
   },
   {
     id: '2',
+    slug: 'maximizing-your-spa-experience',
     title: 'Maximizing Your Spa Experience',
     author: 'Sophie Martinez',
     date: '2025-11-08',
@@ -53,6 +55,7 @@ const blogPosts = [
   },
   {
     id: '3',
+    slug: 'creating-the-perfect-movie-night',
     title: 'Creating the Perfect Movie Night',
     author: 'James Thompson',
     date: '2025-11-05',
@@ -72,6 +75,57 @@ const blogPosts = [
       <p>While traditional cinema snacks are always available, consider elevating your experience with our gourmet options. Fresh popcorn with truffle butter, artisan chocolates, and premium beverages can transform a good movie night into an unforgettable one.</p>
 
       <p>For longer viewings or double features, we can arrange for light meals to be served during intermission. Our catering team works with you to create a menu that complements your chosen films.</p>
+    `,
+  },
+  {
+    id: '4',
+    slug: 'sustainable-luxury-our-commitment',
+    title: 'Sustainable Luxury: Our Commitment',
+    author: 'David Chen',
+    date: '2025-11-01',
+    category: 'Sustainability',
+    imageUrl: 'https://images.pexels.com/photos/1268855/pexels-photo-1268855.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    readTime: '7 min read',
+    content: `
+      <p>Luxury and sustainability are not mutually exclusive. At NH&T Estates, we believe thoughtful design and responsible operations elevate the guest experience while protecting our coastal environments.</p>
+
+      <h2>Our Approach</h2>
+      <p>We partner with local suppliers, reduce single-use plastics, and invest in efficient systems that conserve energy and water. These choices help us preserve the beauty that makes our properties special.</p>
+
+      <h2>Looking Ahead</h2>
+      <p>We are continuously expanding our sustainability initiatives, from eco-friendly materials in renovations to community-led shoreline care programs.</p>
+    `,
+  },
+  {
+    id: '5',
+    slug: 'top-5-beach-activities-near-our-properties',
+    title: 'Top 5 Beach Activities Near Our Properties',
+    author: 'Emma Wilson',
+    date: '2025-10-28',
+    category: 'Travel',
+    imageUrl: 'https://images.pexels.com/photos/1450353/pexels-photo-1450353.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    readTime: '5 min read',
+    content: `
+      <p>From sunrise strolls to sunset paddles, the coast offers endless ways to unwind. Here are our five favorite beach activities for guests of all ages.</p>
+
+      <h2>Favorite Experiences</h2>
+      <p>Try paddleboarding in calm coves, explore local tide pools, or book a private beach picnic with our concierge. Each activity is curated to highlight the natural beauty of the coastline.</p>
+    `,
+  },
+  {
+    id: '6',
+    slug: 'interior-design-trends-in-luxury-homes',
+    title: 'Interior Design Trends in Luxury Homes',
+    author: 'Michael Roberts',
+    date: '2025-10-25',
+    category: 'Design',
+    imageUrl: 'https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    readTime: '6 min read',
+    content: `
+      <p>Modern luxury is defined by calm, layered spaces that feel both refined and welcoming. Natural textures, warm neutrals, and artisanal finishes are defining today’s coastal homes.</p>
+
+      <h2>Design Highlights</h2>
+      <p>We blend timeless silhouettes with contemporary comforts, pairing bespoke lighting with handcrafted furnishings to create spaces that feel uniquely restorative.</p>
     `,
   },
 ];
@@ -101,8 +155,8 @@ const toPlainText = (html: string) =>
     .trim();
 
 export default function BlogPostPage() {
-  const { id } = useParams();
-  const post = blogPosts.find((p) => p.id === id);
+  const { slug } = useParams();
+  const post = blogPosts.find((p) => p.slug === slug);
 
   useEffect(() => {
     const baseTitle = 'NH&T Estates';
@@ -202,7 +256,7 @@ export default function BlogPostPage() {
                 .map((relatedPost) => (
                   <Link
                     key={relatedPost.id}
-                    to={`/blog/${relatedPost.id}`}
+                    to={`/blog/${relatedPost.slug}`}
                     className="group"
                   >
                     <div className="bg-gray-50 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
