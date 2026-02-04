@@ -43,6 +43,13 @@
   }
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-size: revert !important;
+    font-weight: revert !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+
 /* Cormorant Garamond */
 @font-face {
   font-family: "Cormorant Garamond";
