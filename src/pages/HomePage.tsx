@@ -211,7 +211,7 @@ function HomePage() {
               </div>
               <div className="mt-12 text-center">
                 <Link to="/properties">
-                  <Button size="lg" className="mx-auto">
+                  <Button size="lg" className="mx-auto flex" style={{alignItems:'center'}}>
                     Explore All Properties <ChevronRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
