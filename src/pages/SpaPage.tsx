@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { lazy, Suspense, useState, useEffect, FormEvent } from 'react';
 import { Clock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
@@ -9,7 +9,25 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import SuccessModal from '../components/SuccessModal';
 import DatePicker from '../components/DatePicker';
 import ExperienceTierSelector, { type ExperienceTier, type TierOption } from '../components/ExperienceTierSelector';
-import StripeCheckout from '../components/StripeCheckout';
+const StripeCheckout = lazy(() => import('../components/StripeCheckout'));
+
+const setPageMeta = (title: string, description: string) => {
+  document.title = title;
+
+  const metaDescription = document.querySelector<HTMLMetaElement>(
+    'meta[name="description"]'
+  );
+
+  if (metaDescription) {
+    metaDescription.setAttribute('content', description);
+    return;
+  }
+
+  const meta = document.createElement('meta');
+  meta.name = 'description';
+  meta.content = description;
+  document.head.appendChild(meta);
+};
 
 type SpaBookingRow = Database['public']['Tables']['spa_bookings']['Row'];
 type SpaBookingSelect = Pick<SpaBookingRow, 'time_slot' | 'package_type' | 'experience_tier'>;
@@ -78,6 +96,13 @@ const timeSlots = [
 
 export default function SpaPage() {
   const [selectedTier, setSelectedTier] = useState<ExperienceTier | null>('premium');
+
+  useEffect(() => {
+    setPageMeta(
+      'Luxurious Spa | NH&T Estates',
+      'Indulge in bespoke spa experiences with private suites, expert therapists, and curated wellness rituals.'
+    );
+  }, []);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [bookedSlots, setBookedSlots] = useState<Set<string>>(new Set());
   const [fullyBookedDates, setFullyBookedDates] = useState<Set<string>>(new Set());
@@ -420,7 +445,7 @@ export default function SpaPage() {
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-[8000ms] ease-out hover:scale-105"
           style={{
-            backgroundImage: 'url(/Spa.jpg)',
+            backgroundImage: 'url(/Spa.webp)',
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40" />
@@ -630,67 +655,71 @@ export default function SpaPage() {
         </section>
       )}
 
-      <StripeCheckout
-        isOpen={showStripeCheckout}
-        onClose={() => {
-          setShowStripeCheckout(false);
-          setPendingBookingId(null);
-        }}
-        amount={selectedTierDetails?.price || 0}
-        serviceType="spa"
-        bookingId={pendingBookingId || undefined}
-        customerName={formData.fullName}
-        customerEmail={formData.email}
-        onSuccess={async () => {
-          setShowStripeCheckout(false);
-          
-          // Send confirmation email
-          const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-          if (supabaseUrl && !supabaseUrl.includes('placeholder') && pendingBookingId) {
-            try {
-              const emailApiUrl = `${supabaseUrl}/functions/v1/send-booking-confirmation`;
-              await fetch(emailApiUrl, {
-                method: 'POST',
-                headers: {
-                  'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  serviceType: 'spa',
-                  bookingId: pendingBookingId,
-                  fullName: formData.fullName,
-                  email: formData.email,
-                  phone: formData.phone,
-                  bookingDate: formData.date,
-                  timeSlot: formData.timeSlot,
-                  packageType: tierToPackageName[selectedTier!],
-                  packagePrice: selectedTierDetails?.price,
-                  experienceTier: selectedTier,
-                }),
-              });
-            } catch (emailError: any) {
-              console.warn('Email sending failed:', emailError.message);
-            }
-          }
+      {showStripeCheckout && (
+        <Suspense fallback={null}>
+          <StripeCheckout
+            isOpen={showStripeCheckout}
+            onClose={() => {
+              setShowStripeCheckout(false);
+              setPendingBookingId(null);
+            }}
+            amount={selectedTierDetails?.price || 0}
+            serviceType="spa"
+            bookingId={pendingBookingId || undefined}
+            customerName={formData.fullName}
+            customerEmail={formData.email}
+            onSuccess={async () => {
+              setShowStripeCheckout(false);
 
-          setSubmitStatus('success');
-          setErrorMessage('');
-          
-          setFormData({
-            fullName: '',
-            email: '',
-            phone: '',
-            date: '',
-            timeSlot: '',
-          });
-          
-          if (formData.date) {
-            fetchUnavailableSlots(formData.date);
-          }
-          
-          setPendingBookingId(null);
-        }}
-      />
+              // Send confirmation email
+              const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+              if (supabaseUrl && !supabaseUrl.includes('placeholder') && pendingBookingId) {
+                try {
+                  const emailApiUrl = `${supabaseUrl}/functions/v1/send-booking-confirmation`;
+                  await fetch(emailApiUrl, {
+                    method: 'POST',
+                    headers: {
+                      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      serviceType: 'spa',
+                      bookingId: pendingBookingId,
+                      fullName: formData.fullName,
+                      email: formData.email,
+                      phone: formData.phone,
+                      bookingDate: formData.date,
+                      timeSlot: formData.timeSlot,
+                      packageType: tierToPackageName[selectedTier!],
+                      packagePrice: selectedTierDetails?.price,
+                      experienceTier: selectedTier,
+                    }),
+                  });
+                } catch (emailError: any) {
+                  console.warn('Email sending failed:', emailError.message);
+                }
+              }
+
+              setSubmitStatus('success');
+              setErrorMessage('');
+
+              setFormData({
+                fullName: '',
+                email: '',
+                phone: '',
+                date: '',
+                timeSlot: '',
+              });
+
+              if (formData.date) {
+                fetchUnavailableSlots(formData.date);
+              }
+
+              setPendingBookingId(null);
+            }}
+          />
+        </Suspense>
+      )}
 
       <SuccessModal
         isOpen={submitStatus === 'success'}

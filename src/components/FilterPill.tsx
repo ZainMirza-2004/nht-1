@@ -45,11 +45,11 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
     onFilterChange({ ...filters, sortBy: 'none' });
   };
 
-  const hasActiveFilters = filters.location || filters.minPrice || filters.maxPrice || filters.sortBy !== 'none';
+  const hasActiveFilters =
+    filters.location || filters.minPrice || filters.maxPrice || filters.sortBy !== 'none';
 
   return (
     <div className="bg-white rounded-full shadow-lg border-2 border-blue-900 p-2 sm:p-3 flex flex-wrap items-center gap-2 sm:gap-3 max-w-4xl mx-auto">
-      {/* Location Filter */}
       <div className="relative flex-shrink-0">
         <button
           onClick={() => {
@@ -69,8 +69,8 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
           </span>
           {filters.location && (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
+              onClick={(event) => {
+                event.stopPropagation();
                 clearLocation();
               }}
               className="ml-1 hover:bg-white/20 rounded-full p-0.5 flex-shrink-0"
@@ -81,10 +81,7 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
         </button>
         {isLocationOpen && (
           <>
-            <div
-              className="fixed inset-0 z-10"
-              onClick={() => setIsLocationOpen(false)}
-            />
+            <div className="fixed inset-0 z-10" onClick={() => setIsLocationOpen(false)} />
             <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-200 z-20 min-w-[200px] max-h-[300px] overflow-y-auto">
               <div className="p-2">
                 <button
@@ -114,7 +111,6 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
         )}
       </div>
 
-      {/* Price Range Filter */}
       <div className="relative flex-shrink-0">
         <button
           onClick={() => {
@@ -136,8 +132,8 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
           </span>
           {(filters.minPrice || filters.maxPrice) && (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
+              onClick={(event) => {
+                event.stopPropagation();
                 clearPrice();
               }}
               className="ml-1 hover:bg-white/20 rounded-full p-0.5 flex-shrink-0"
@@ -148,10 +144,7 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
         </button>
         {isPriceOpen && (
           <>
-            <div
-              className="fixed inset-0 z-10"
-              onClick={() => setIsPriceOpen(false)}
-            />
+            <div className="fixed inset-0 z-10" onClick={() => setIsPriceOpen(false)} />
             <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-200 z-20 p-4 min-w-[280px]">
               <div className="space-y-3">
                 <div>
@@ -161,7 +154,7 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
                   <input
                     type="number"
                     value={filters.minPrice}
-                    onChange={(e) => handlePriceChange('minPrice', e.target.value)}
+                    onChange={(event) => handlePriceChange('minPrice', event.target.value)}
                     placeholder="0"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-transparent"
                   />
@@ -173,7 +166,7 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
                   <input
                     type="number"
                     value={filters.maxPrice}
-                    onChange={(e) => handlePriceChange('maxPrice', e.target.value)}
+                    onChange={(event) => handlePriceChange('maxPrice', event.target.value)}
                     placeholder="No limit"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-transparent"
                   />
@@ -184,7 +177,6 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
         )}
       </div>
 
-      {/* Sort Filter */}
       <div className="relative flex-shrink-0">
         <button
           onClick={() => {
@@ -208,8 +200,8 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
           </span>
           {filters.sortBy !== 'none' && (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
+              onClick={(event) => {
+                event.stopPropagation();
                 clearSort();
               }}
               className="ml-1 hover:bg-white/20 rounded-full p-0.5 flex-shrink-0"
@@ -220,10 +212,7 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
         </button>
         {isSortOpen && (
           <>
-            <div
-              className="fixed inset-0 z-10"
-              onClick={() => setIsSortOpen(false)}
-            />
+            <div className="fixed inset-0 z-10" onClick={() => setIsSortOpen(false)} />
             <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-200 z-20 min-w-[200px]">
               <div className="p-2">
                 <button
@@ -256,7 +245,6 @@ export default function FilterPill({ filters, onFilterChange, locations }: Filte
         )}
       </div>
 
-      {/* Clear All Filters */}
       {hasActiveFilters && (
         <button
           onClick={() => onFilterChange({ location: '', minPrice: '', maxPrice: '', sortBy: 'none' })}

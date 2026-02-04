@@ -35,7 +35,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-20">
           <Link to="/" className="flex items-center space-x-0.1 group">
             <img 
-              src="/logo1.png" 
+              src="/logo1.webp" 
               alt="NH&T Estates" 
               className="h-12 w-auto transition-opacity duration-300 group-hover:opacity-90"
             />

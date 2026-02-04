@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, User, ArrowLeft } from 'lucide-react';
 
@@ -75,9 +76,50 @@ const blogPosts = [
   },
 ];
 
+const setPageMeta = (title: string, description: string) => {
+  document.title = title;
+
+  const metaDescription = document.querySelector<HTMLMetaElement>(
+    'meta[name="description"]'
+  );
+
+  if (metaDescription) {
+    metaDescription.setAttribute('content', description);
+    return;
+  }
+
+  const meta = document.createElement('meta');
+  meta.name = 'description';
+  meta.content = description;
+  document.head.appendChild(meta);
+};
+
+const toPlainText = (html: string) =>
+  html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
 export default function BlogPostPage() {
   const { id } = useParams();
   const post = blogPosts.find((p) => p.id === id);
+
+  useEffect(() => {
+    const baseTitle = 'NH&T Estates';
+    const baseDescription =
+      'Stories and insights on luxury coastal living, wellness, and curated experiences.';
+
+    if (!post) {
+      setPageMeta(`Journal | ${baseTitle}`, baseDescription);
+      return;
+    }
+
+    const plainText = toPlainText(post.content);
+    const description =
+      plainText.length > 160 ? `${plainText.slice(0, 157)}...` : plainText || baseDescription;
+
+    setPageMeta(`${post.title} | Journal | ${baseTitle}`, description);
+  }, [post]);
 
   if (!post) {
     return (

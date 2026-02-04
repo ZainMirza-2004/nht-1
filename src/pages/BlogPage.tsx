@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, User, ArrowRight } from 'lucide-react';
 
@@ -85,8 +85,33 @@ const blogPosts: BlogPost[] = [
 
 const categories = ['All', 'Lifestyle', 'Wellness', 'Entertainment', 'Sustainability', 'Travel', 'Design'];
 
+const setPageMeta = (title: string, description: string) => {
+  document.title = title;
+
+  const metaDescription = document.querySelector<HTMLMetaElement>(
+    'meta[name="description"]'
+  );
+
+  if (metaDescription) {
+    metaDescription.setAttribute('content', description);
+    return;
+  }
+
+  const meta = document.createElement('meta');
+  meta.name = 'description';
+  meta.content = description;
+  document.head.appendChild(meta);
+};
+
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
+
+  useEffect(() => {
+    setPageMeta(
+      'Journal | NH&T Estates',
+      'Stories and insights on luxury coastal living, wellness, and curated experiences.'
+    );
+  }, []);
 
   const filteredPosts =
     selectedCategory === 'All'

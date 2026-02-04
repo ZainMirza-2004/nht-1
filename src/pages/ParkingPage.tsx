@@ -1,14 +1,32 @@
-import { useState, FormEvent } from 'react';
+import { lazy, Suspense, useState, useEffect, FormEvent } from 'react';
 import { Car } from 'lucide-react';
 import Input from '../components/Input';
 import LoadingSpinner from '../components/LoadingSpinner';
 import DatePicker from '../components/DatePicker';
 import HierarchicalPropertySelect from '../components/HierarchicalPropertySelect';
 import OTPVerificationModal from '../components/OTPVerificationModal';
-import StripeCheckout from '../components/StripeCheckout';
+const StripeCheckout = lazy(() => import('../components/StripeCheckout'));
 import { formatPhoneToE164, formatPhoneForDisplay, getPhoneValidationError } from '../lib/phone-utils';
 
 type PermitType = 'free' | 'paid';
+
+const setPageMeta = (title: string, description: string) => {
+  document.title = title;
+
+  const metaDescription = document.querySelector<HTMLMetaElement>(
+    'meta[name="description"]'
+  );
+
+  if (metaDescription) {
+    metaDescription.setAttribute('content', description);
+    return;
+  }
+
+  const meta = document.createElement('meta');
+  meta.name = 'description';
+  meta.content = description;
+  document.head.appendChild(meta);
+};
 
 export default function ParkingPage() {
   const [loading, setLoading] = useState(false);
@@ -17,6 +35,13 @@ export default function ParkingPage() {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [showStripeCheckout, setShowStripeCheckout] = useState(false);
   const [pendingPermitData, setPendingPermitData] = useState<any>(null);
+
+  useEffect(() => {
+    setPageMeta(
+      'Parking & Transport | NH&T Estates',
+      'Seamless arrivals with valet, secure parking, and transport coordination for every stay.'
+    );
+  }, []);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -657,28 +682,36 @@ export default function ParkingPage() {
         onResend={handleOTPRequest}
       />
 
-      <StripeCheckout
-        isOpen={showStripeCheckout}
-        onClose={() => {
-          setShowStripeCheckout(false);
-          setPendingPermitData(null);
-        }}
-        amount={totalPrice}
-        serviceType="parking"
-        bookingId={pendingPermitData ? JSON.stringify({
-          fullName: pendingPermitData.fullName,
-          email: pendingPermitData.email,
-          phone: pendingPermitData.phone,
-          vehicleMake: pendingPermitData.vehicleMake,
-          registration: pendingPermitData.registration,
-          propertyName: pendingPermitData.propertyName,
-          permitDate: pendingPermitData.permitDate,
-          numberOfNights: pendingPermitData.numberOfNights,
-        }) : undefined}
-        customerName={pendingPermitData?.fullName}
-        customerEmail={pendingPermitData?.email}
-        onSuccess={handlePaidPermitSuccess}
-      />
+      {showStripeCheckout && (
+        <Suspense fallback={null}>
+          <StripeCheckout
+            isOpen={showStripeCheckout}
+            onClose={() => {
+              setShowStripeCheckout(false);
+              setPendingPermitData(null);
+            }}
+            amount={totalPrice}
+            serviceType="parking"
+            bookingId={
+              pendingPermitData
+                ? JSON.stringify({
+                    fullName: pendingPermitData.fullName,
+                    email: pendingPermitData.email,
+                    phone: pendingPermitData.phone,
+                    vehicleMake: pendingPermitData.vehicleMake,
+                    registration: pendingPermitData.registration,
+                    propertyName: pendingPermitData.propertyName,
+                    permitDate: pendingPermitData.permitDate,
+                    numberOfNights: pendingPermitData.numberOfNights,
+                  })
+                : undefined
+            }
+            customerName={pendingPermitData?.fullName}
+            customerEmail={pendingPermitData?.email}
+            onSuccess={handlePaidPermitSuccess}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

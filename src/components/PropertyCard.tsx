@@ -8,13 +8,17 @@ export interface Property {
   price_per_night: number;
   bedrooms: number;
   sleeps: number;
-  rating: number; // Rating from 1-5, can be 4, 4.5, or 5
+  rating: number;
 }
 
-// Utility function to normalize locations - convert Penylan/Roath edge zones and Cardiff Centre to City Centre
 export const normalizeLocation = (location: string): string => {
   const lowerLocation = location.toLowerCase();
-  if (lowerLocation.includes('penylan') || lowerLocation.includes('roath') || lowerLocation.includes('cardiff centre')) {
+  if (
+    lowerLocation.includes('penylan') ||
+    lowerLocation.includes('roath') ||
+    lowerLocation.includes('cardiff centre') ||
+    lowerLocation.includes('cardiff city centre')
+  ) {
     return 'City Centre';
   }
   return location;
@@ -25,7 +29,6 @@ interface PropertyCardProps {
 }
 
 export default function PropertyCard({ property }: PropertyCardProps) {
-  // Render star rating
   const renderStars = () => {
     const fullStars = Math.floor(property.rating);
     const hasHalfStar = property.rating % 1 !== 0;
@@ -33,14 +36,12 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
     return (
       <div className="flex items-center gap-0.5">
-        {[...Array(fullStars)].map((_, i) => (
-          <span key={i} className="text-yellow-400 text-lg">★</span>
+        {[...Array(fullStars)].map((_, index) => (
+          <span key={index} className="text-yellow-400 text-lg">★</span>
         ))}
-        {hasHalfStar && (
-          <span className="text-yellow-400 text-lg">☆</span>
-        )}
-        {[...Array(emptyStars)].map((_, i) => (
-          <span key={i} className="text-gray-300 text-lg">☆</span>
+        {hasHalfStar && <span className="text-yellow-400 text-lg">☆</span>}
+        {[...Array(emptyStars)].map((_, index) => (
+          <span key={index} className="text-gray-300 text-lg">☆</span>
         ))}
       </div>
     );
@@ -52,19 +53,24 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         <img
           src={property.image_url}
           alt={property.title}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
         />
         <div className="absolute top-4 right-4 bg-white px-4 py-2 rounded-full shadow-lg">
-          <span className="text-blue-900 font-serif font-semibold">£{property.price_per_night}/night</span>
+          <span className="text-blue-900 font-serif font-semibold">
+            £{property.price_per_night}/night
+          </span>
         </div>
       </div>
       <div className="p-6 flex flex-col flex-grow">
         <h3 className="text-xl font-serif text-gray-900 mb-2 group-hover:text-blue-900 transition-colors line-clamp-1">
           {property.title}
         </h3>
-        <p className="text-gray-600 text-xs mb-3 line-clamp-1">{normalizeLocation(property.location)}</p>
-        
-        {/* Star Rating */}
+        <p className="text-gray-600 text-xs mb-3 line-clamp-1">
+          {normalizeLocation(property.location)}
+        </p>
+
         <div className="mb-3">
           {renderStars()}
         </div>
@@ -76,14 +82,13 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           <span>{property.bedrooms} Bedroom{property.bedrooms !== 1 ? 's' : ''}</span>
           <span>Sleeps {property.sleeps}</span>
         </div>
-        
-        {/* More Info Button */}
+
         <a
           href={property.airbnb_url}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full bg-blue-900 text-white text-center py-3 px-4 rounded-lg font-medium hover:bg-blue-800 transition-colors duration-200 mt-auto"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(event) => event.stopPropagation()}
         >
           More Info
         </a>
