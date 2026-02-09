@@ -343,13 +343,32 @@ export default function ExploreAllProperties() {
           <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-4">
             All Properties
           </h1>
-          <p className="text-xl text-gray-600">
-            Discover our full collection of luxury accommodations
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Explore luxury properties in Cardiff and London with refined interiors, curated amenities,
+            and seamless booking. From elegant apartments to private room stays, every space is selected
+            for comfort, style, and location.
+          </p>
+          <p className="text-base text-gray-600 max-w-3xl mx-auto mt-4">
+            Use filters to find the right apartment and room booking for your stay. Expect thoughtful
+            details, premium bedding, fast connectivity, and concierge-ready support throughout your visit.
           </p>
         </div>
 
         <div className="mb-12">
           <FilterPill filters={filters} onFilterChange={setFilters} locations={locations} />
+        </div>
+        <div className="max-w-4xl mx-auto mb-12 text-gray-600 leading-relaxed">
+          <p className="mb-4">
+            This collection is designed for Luxury Properties booking with the comfort of home and the
+            polish of a hotel. Expect apartment and room booking options that are well-located, beautifully
+            presented, and supported by concierge care. Every property includes a clear list of amenities
+            so you know exactly what is included before you arrive.
+          </p>
+          <p>
+            From short city breaks to longer stays, our rooms and apartments offer reliable Wi-Fi,
+            premium bedding, and a thoughtful layout that balances privacy with convenience. Filter by
+            location and price to find your ideal stay in Cardiff or London.
+          </p>
         </div>
 
         {Object.keys(groupedProperties).length > 0 ? (

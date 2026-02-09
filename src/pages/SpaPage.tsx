@@ -474,8 +474,16 @@ export default function SpaPage() {
               Choose Your Journey
             </h2>
             <div className="h-px w-12 bg-amber-800/30 mx-auto mb-6"></div>
-            <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto leading-relaxed">
-              Thoughtfully curated wellness experiences designed for your peace of mind
+            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto leading-relaxed">
+              Our Luxury Spa Service is a private, appointment-only sanctuary crafted for guests who want
+              calm, space, and precision. Designed for visitors to Cardiff and for London travelers seeking
+              a restorative break, each session pairs tranquil surroundings with concierge care, from
+              personalized timings to tailored enhancements.
+            </p>
+            <p className="text-base text-gray-600 font-light max-w-3xl mx-auto leading-relaxed mt-6">
+              Book a solo reset, a couple's escape, or a group retreat. Every detail is considered, from
+              warm lighting and premium facilities to discreet check-in and flexible scheduling. This is
+              wellness without noise, built around privacy, comfort, and the unhurried luxury you expect.
             </p>
           </div>
 
@@ -485,6 +493,20 @@ export default function SpaPage() {
             onSelectTier={handleTierSelect}
             defaultTier="premium"
           />
+
+          <div className="max-w-3xl mx-auto mt-12 text-gray-600 font-light leading-relaxed">
+            <p className="mb-5">
+              Each Luxury Spa Service is hosted in a private setting with carefully timed sessions, so
+              you never feel rushed. We welcome guests from London and Cardiff who want a quieter, more
+              personal alternative to busy facilities. From the moment you arrive, our focus is simple:
+              deliver a calm, elevated experience that supports real rest.
+            </p>
+            <p>
+              Choose the duration that suits your schedule, then add finishing touches like cold plunge,
+              sauna time, or a longer unwind. Our concierge team keeps every visit discreet and smooth,
+              with clear guidance and flexible availability where possible.
+            </p>
+          </div>
 
           <div className="text-center mt-16 opacity-0 animate-fade-in stagger-4">
             <button
