@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, User, ArrowRight } from 'lucide-react';
+import Seo from '../components/Seo';
 
 interface BlogPost {
   id: string;
@@ -92,33 +93,8 @@ const blogPosts: BlogPost[] = [
 
 const categories = ['All', 'Lifestyle', 'Wellness', 'Entertainment', 'Sustainability', 'Travel', 'Design'];
 
-const setPageMeta = (title: string, description: string) => {
-  document.title = title;
-
-  const metaDescription = document.querySelector<HTMLMetaElement>(
-    'meta[name="description"]'
-  );
-
-  if (metaDescription) {
-    metaDescription.setAttribute('content', description);
-    return;
-  }
-
-  const meta = document.createElement('meta');
-  meta.name = 'description';
-  meta.content = description;
-  document.head.appendChild(meta);
-};
-
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
-
-  useEffect(() => {
-    setPageMeta(
-      'Journal | NH&T Estates',
-      'Stories and insights on luxury coastal living, wellness, and curated experiences.'
-    );
-  }, []);
 
   const filteredPosts =
     selectedCategory === 'All'
@@ -127,6 +103,11 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen pt-20 bg-gray-50">
+      <Seo
+        title="Journal | NH&T Estates"
+        description="Stories and insights on luxury coastal living, wellness, and curated experiences."
+        canonicalPath="/blog"
+      />
       <section className="bg-white py-16 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">

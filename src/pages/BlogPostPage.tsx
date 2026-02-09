@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, User, ArrowLeft } from 'lucide-react';
+import Seo from '../components/Seo';
 
 const blogPosts = [
   {
@@ -130,24 +130,6 @@ const blogPosts = [
   },
 ];
 
-const setPageMeta = (title: string, description: string) => {
-  document.title = title;
-
-  const metaDescription = document.querySelector<HTMLMetaElement>(
-    'meta[name="description"]'
-  );
-
-  if (metaDescription) {
-    metaDescription.setAttribute('content', description);
-    return;
-  }
-
-  const meta = document.createElement('meta');
-  meta.name = 'description';
-  meta.content = description;
-  document.head.appendChild(meta);
-};
-
 const toPlainText = (html: string) =>
   html
     .replace(/<[^>]*>/g, ' ')
@@ -157,27 +139,19 @@ const toPlainText = (html: string) =>
 export default function BlogPostPage() {
   const { slug } = useParams();
   const post = blogPosts.find((p) => p.slug === slug);
-
-  useEffect(() => {
-    const baseTitle = 'NH&T Estates';
-    const baseDescription =
-      'Stories and insights on luxury coastal living, wellness, and curated experiences.';
-
-    if (!post) {
-      setPageMeta(`Journal | ${baseTitle}`, baseDescription);
-      return;
-    }
-
-    const plainText = toPlainText(post.content);
-    const description =
-      plainText.length > 160 ? `${plainText.slice(0, 157)}...` : plainText || baseDescription;
-
-    setPageMeta(`${post.title} | Journal | ${baseTitle}`, description);
-  }, [post]);
+  const baseTitle = 'NH&T Estates';
+  const baseDescription =
+    'Stories and insights on luxury coastal living, wellness, and curated experiences.';
+  const plainText = post ? toPlainText(post.content) : '';
+  const description =
+    plainText.length > 160 ? `${plainText.slice(0, 157)}...` : plainText || baseDescription;
+  const title = post ? `${post.title} | Journal | ${baseTitle}` : `Journal | ${baseTitle}`;
+  const canonicalPath = post ? `/blog/${post.slug}` : '/blog';
 
   if (!post) {
     return (
       <div className="min-h-screen pt-20 flex items-center justify-center">
+        <Seo title={title} description={description} canonicalPath={canonicalPath} />
         <div className="text-center">
           <h1 className="text-4xl font-serif text-gray-900 mb-4">Post Not Found</h1>
           <Link to="/blog" className="text-blue-900 hover:underline">
@@ -190,6 +164,7 @@ export default function BlogPostPage() {
 
   return (
     <div className="min-h-screen pt-20 bg-gray-50">
+      <Seo title={title} description={description} canonicalPath={canonicalPath} />
       <article>
         <div className="relative h-96 md:h-[500px] overflow-hidden">
           <img

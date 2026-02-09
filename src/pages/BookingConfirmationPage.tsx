@@ -3,24 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CheckCircle2, Calendar, Clock, MapPin, Mail, Phone } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
-
-const setPageMeta = (title: string, description: string) => {
-  document.title = title;
-
-  const metaDescription = document.querySelector<HTMLMetaElement>(
-    'meta[name="description"]'
-  );
-
-  if (metaDescription) {
-    metaDescription.setAttribute('content', description);
-    return;
-  }
-
-  const meta = document.createElement('meta');
-  meta.name = 'description';
-  meta.content = description;
-  document.head.appendChild(meta);
-};
+import Seo from '../components/Seo';
 
 interface BookingData {
   id: string;
@@ -48,13 +31,9 @@ export default function BookingConfirmationPage() {
   const [error, setError] = useState<string | null>(null);
   const permitCreationAttempted = useRef(false); // Prevent duplicate permit creation
   const dataFetched = useRef(false); // Prevent useEffect from running multiple times
-
-  useEffect(() => {
-    setPageMeta(
-      'Booking Confirmed | NH&T Estates',
-      'Your booking has been confirmed. We look forward to hosting you at NH&T Estates.'
-    );
-  }, []);
+  const seoTitle = 'Booking Confirmed | NH&T Estates';
+  const seoDescription =
+    'Your booking has been confirmed. We look forward to hosting you at NH&T Estates.';
 
   useEffect(() => {
     // Prevent multiple executions
@@ -530,6 +509,7 @@ export default function BookingConfirmationPage() {
   if (loading) {
     return (
       <div className="min-h-screen pt-20 bg-gradient-to-b from-stone-50 via-white to-stone-50 flex items-center justify-center">
+        <Seo title={seoTitle} description={seoDescription} />
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mb-4"></div>
           <p className="text-gray-600 font-light">Loading your booking confirmation...</p>
@@ -541,6 +521,7 @@ export default function BookingConfirmationPage() {
   if (error || !bookingData) {
     return (
       <div className="min-h-screen pt-20 bg-gradient-to-b from-stone-50 via-white to-stone-50 flex items-center justify-center px-4">
+        <Seo title={seoTitle} description={seoDescription} />
         <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 text-center">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl">⚠️</span>
@@ -560,6 +541,7 @@ export default function BookingConfirmationPage() {
 
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-stone-50 via-white to-stone-50">
+      <Seo title={seoTitle} description={seoDescription} />
       <div className="max-w-3xl mx-auto px-4 py-16">
         {/* Success Header */}
         <div className="text-center mb-12">

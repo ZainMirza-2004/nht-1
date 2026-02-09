@@ -1,25 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Property } from '../components/PropertyCard';
 import FilterPill, { FilterState } from '../components/FilterPill';
 import PropertyGroup from '../components/PropertyGroup';
-
-const setPageMeta = (title: string, description: string) => {
-  document.title = title;
-
-  const metaDescription = document.querySelector<HTMLMetaElement>(
-    'meta[name="description"]'
-  );
-
-  if (metaDescription) {
-    metaDescription.setAttribute('content', description);
-    return;
-  }
-
-  const meta = document.createElement('meta');
-  meta.name = 'description';
-  meta.content = description;
-  document.head.appendChild(meta);
-};
+import Seo from '../components/Seo';
 
 const mockProperties: Property[] = [
   {
@@ -303,12 +286,6 @@ export default function ExploreAllProperties() {
     sortBy: 'none',
   });
 
-  useEffect(() => {
-    setPageMeta(
-      'NH&T Estates - Explore All Properties',
-      'Browse the full NH&T Estates collection of luxury properties, from Cardiff to London. Filter by location and price to find the perfect stay.'
-    );
-  }, []);
 
   const locations = useMemo(() => {
     const uniqueLocations = new Set(mockProperties.map((property) => property.location));
@@ -356,6 +333,11 @@ export default function ExploreAllProperties() {
 
   return (
     <div className="min-h-screen bg-white pt-24 pb-16">
+      <Seo
+        title="NH&T Estates - Explore All Properties"
+        description="Browse the full NH&T Estates collection of luxury properties, from Cardiff to London. Filter by location and price to find the perfect stay."
+        canonicalPath="/properties"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-4">

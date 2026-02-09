@@ -1,32 +1,15 @@
-import { lazy, Suspense, useState, useEffect, FormEvent } from 'react';
+import { lazy, Suspense, useState, FormEvent } from 'react';
 import { Car } from 'lucide-react';
 import Input from '../components/Input';
 import LoadingSpinner from '../components/LoadingSpinner';
 import DatePicker from '../components/DatePicker';
 import HierarchicalPropertySelect from '../components/HierarchicalPropertySelect';
 import OTPVerificationModal from '../components/OTPVerificationModal';
+import Seo from '../components/Seo';
 const StripeCheckout = lazy(() => import('../components/StripeCheckout'));
 import { formatPhoneToE164, formatPhoneForDisplay, getPhoneValidationError } from '../lib/phone-utils';
 
 type PermitType = 'free' | 'paid';
-
-const setPageMeta = (title: string, description: string) => {
-  document.title = title;
-
-  const metaDescription = document.querySelector<HTMLMetaElement>(
-    'meta[name="description"]'
-  );
-
-  if (metaDescription) {
-    metaDescription.setAttribute('content', description);
-    return;
-  }
-
-  const meta = document.createElement('meta');
-  meta.name = 'description';
-  meta.content = description;
-  document.head.appendChild(meta);
-};
 
 export default function ParkingPage() {
   const [loading, setLoading] = useState(false);
@@ -35,13 +18,6 @@ export default function ParkingPage() {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [showStripeCheckout, setShowStripeCheckout] = useState(false);
   const [pendingPermitData, setPendingPermitData] = useState<any>(null);
-
-  useEffect(() => {
-    setPageMeta(
-      'Parking & Transport | NH&T Estates',
-      'Seamless arrivals with valet, secure parking, and transport coordination for every stay.'
-    );
-  }, []);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -323,6 +299,11 @@ export default function ParkingPage() {
 
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-stone-50 via-white to-stone-50">
+      <Seo
+        title="Parking & Transport | NH&T Estates"
+        description="Seamless arrivals with valet, secure parking, and transport coordination for every stay."
+        canonicalPath="/parking"
+      />
       <style>{`
         @keyframes fadeInUp {
           from {

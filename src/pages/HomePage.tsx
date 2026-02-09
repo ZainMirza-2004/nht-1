@@ -6,24 +6,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { supabase } from "../lib/supabase";
 import Button from "../components/Button";
 import LoadingSpinner from "../components/LoadingSpinner";
-
-const setPageMeta = (title: string, description: string) => {
-  document.title = title;
-
-  const metaDescription = document.querySelector<HTMLMetaElement>(
-    'meta[name="description"]'
-  );
-
-  if (metaDescription) {
-    metaDescription.setAttribute("content", description);
-    return;
-  }
-
-  const meta = document.createElement("meta");
-  meta.name = "description";
-  meta.content = description;
-  document.head.appendChild(meta);
-};
+import Seo from "../components/Seo";
 
 /* =======================
    Types
@@ -112,18 +95,16 @@ function HomePage() {
   }, []);
 
   useEffect(() => {
-    setPageMeta(
-      "NH&T Estates - Luxury Coastal Property Management",
-      "Experience unparalleled luxury with NH&T Estates. Premium coastal properties with world-class spa and cinema amenities."
-    );
-  }, []);
-
-  useEffect(() => {
     fetchProperties();
   }, [fetchProperties]);
 
   return (
     <div className="min-h-screen">
+      <Seo
+        title="NH&T Estates - Luxury Coastal Property Management"
+        description="Experience unparalleled luxury with NH&T Estates. Premium coastal properties with world-class spa and cinema amenities."
+        canonicalPath="/"
+      />
       {/* HERO */}
       <section className="relative h-screen overflow-hidden flex items-center justify-center">
         <picture className="absolute inset-0">

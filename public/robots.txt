@@ -1,0 +1,14 @@
+User-agent: *
+Disallow: /wp-login.php
+Disallow: /wp-admin/
+Disallow: /wp-admin
+Disallow: /wp-content/
+Disallow: /wp-includes/
+Disallow: /wp-json/
+Disallow: /wp-*.php
+Disallow: /xmlrpc.php
+Disallow: /*?wc-ajax=
+Disallow: /feed/
+Disallow: */feed/
+
+Sitemap: https://nhtestates.co.uk/sitemap.xml

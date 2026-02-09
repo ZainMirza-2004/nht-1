@@ -9,25 +9,8 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import SuccessModal from '../components/SuccessModal';
 import DatePicker from '../components/DatePicker';
 import ExperienceTierSelector, { type ExperienceTier, type TierOption } from '../components/ExperienceTierSelector';
+import Seo from '../components/Seo';
 const StripeCheckout = lazy(() => import('../components/StripeCheckout'));
-
-const setPageMeta = (title: string, description: string) => {
-  document.title = title;
-
-  const metaDescription = document.querySelector<HTMLMetaElement>(
-    'meta[name="description"]'
-  );
-
-  if (metaDescription) {
-    metaDescription.setAttribute('content', description);
-    return;
-  }
-
-  const meta = document.createElement('meta');
-  meta.name = 'description';
-  meta.content = description;
-  document.head.appendChild(meta);
-};
 
 type SpaBookingRow = Database['public']['Tables']['spa_bookings']['Row'];
 type SpaBookingSelect = Pick<SpaBookingRow, 'time_slot' | 'package_type' | 'experience_tier'>;
@@ -96,13 +79,6 @@ const timeSlots = [
 
 export default function SpaPage() {
   const [selectedTier, setSelectedTier] = useState<ExperienceTier | null>('premium');
-
-  useEffect(() => {
-    setPageMeta(
-      'Luxurious Spa | NH&T Estates',
-      'Indulge in bespoke spa experiences with private suites, expert therapists, and curated wellness rituals.'
-    );
-  }, []);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [bookedSlots, setBookedSlots] = useState<Set<string>>(new Set());
   const [fullyBookedDates, setFullyBookedDates] = useState<Set<string>>(new Set());
@@ -371,6 +347,11 @@ export default function SpaPage() {
 
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-stone-50 via-white to-stone-50">
+      <Seo
+        title="Luxurious Spa | NH&T Estates"
+        description="Indulge in bespoke spa experiences with private suites, expert therapists, and curated wellness rituals."
+        canonicalPath="/spa"
+      />
       <style>{`
         @keyframes fadeInUp {
           from {
