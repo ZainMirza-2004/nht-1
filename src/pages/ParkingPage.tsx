@@ -391,14 +391,8 @@ export default function ParkingPage() {
                 <h2 className="text-4xl font-light tracking-tight text-gray-900 mb-3">
                   Request Your Permit
                 </h2>
-                <p className="text-base text-gray-500 font-light max-w-2xl mx-auto leading-relaxed">
-                  Arrange a parking spot booking in London or Cardiff with a simple, secure request. Our
-                  premium parking options are designed for guests who value smooth arrivals, clear
-                  communication, and a concierge experience from start to finish.
-                </p>
-                <p className="text-base text-gray-500 font-light max-w-2xl mx-auto leading-relaxed mt-4">
-                  Choose the permit type that fits your stay, then confirm your details below. We handle
-                  verification and delivery so you can focus on your booking, not the logistics.
+                <p className="text-base text-gray-500 font-light">
+                  Complete the form below to secure your parking arrangements
                 </p>
               </div>
 
@@ -414,20 +408,6 @@ export default function ParkingPage() {
                     <strong className="font-medium text-gray-900">Paid Parking Permit (On-Street):</strong> Unlimited cars. Instant payment via Stripe - no approval needed.
                   </p>
                 </div>
-              </div>
-              <div className="mb-8 text-gray-600 font-light leading-relaxed">
-                <p className="mb-4">
-                  For guests booking premium stays in London or Cardiff, parking should feel as seamless
-                  as your check-in. Our parking spot booking flow prioritizes clarity, speed, and secure
-                  confirmation so you can arrive without stress. Select a permit that fits your stay and
-                  we will guide the rest.
-                </p>
-                <p>
-                  Whether you are visiting for business, an extended holiday, or a weekend escape, our
-                  concierge team can assist with premium parking options and local guidance. If you have
-                  questions about timing or vehicle requirements, reach out and we will coordinate a
-                  solution that matches your itinerary.
-                </p>
               </div>
 
               {submitStatus === 'success' && (
