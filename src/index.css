@@ -48,12 +48,12 @@
     font-weight: revert !important;
     margin-top: 10px !important;
     margin-bottom: 10px !important;
-}*/
+}
 
 a{
   color: rgb(0 61 122 / var(--tw-text-opacity, 1));
   font-weight: 500;
-}
+}*/
 
 /* Cormorant Garamond */
 @font-face {
