@@ -476,16 +476,8 @@ export default function CinemaPage() {
               Choose Your Cinema Experience
             </h2>
             <div className="h-px w-12 bg-amber-800/30 mx-auto mb-6"></div>
-            <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto leading-relaxed">
-              Cinema Booking in London and Cardiff begins with a private room, premium screens, and
-              concierge-ready service that feels effortless. Our cinema experiences are designed for guests
-              who want a refined night in, whether you are celebrating, hosting friends, or planning a
-              quiet escape.
-            </p>
-            <p className="text-base text-gray-600 font-light max-w-3xl mx-auto leading-relaxed mt-6">
-              Choose the tier that matches your pace, from short evening sessions to longer screenings with
-              added comforts. Every booking is handled with discretion, clear timing, and a focus on detail
-              so your experience feels curated from arrival to credits.
+            <p className="text-xl text-gray-600 font-light max-w-2xl mx-auto leading-relaxed">
+              Select the perfect tier for your private viewing experience
             </p>
           </div>
 
@@ -495,20 +487,6 @@ export default function CinemaPage() {
             onSelectTier={handleTierSelect}
             defaultTier="premium"
           />
-
-          <div className="max-w-3xl mx-auto mt-12 text-gray-600 font-light leading-relaxed">
-            <p className="mb-5">
-              Our private cinema rooms are designed for guests who want an elevated evening without
-              distractions. We host Cinema Booking in London and Cardiff for travelers seeking a refined
-              alternative to standard screenings, with comfortable seating, premium audio, and a space
-              that feels exclusively yours.
-            </p>
-            <p>
-              Whether you are celebrating a milestone or simply carving out time to unwind, your booking
-              includes clear timings, discreet access, and concierge support. Select the tier that fits
-              your plans and enjoy a cinematic experience that is calm, curated, and effortless.
-            </p>
-          </div>
 
           <div className="text-center mt-16 opacity-0 animate-fade-in stagger-4">
             <button
