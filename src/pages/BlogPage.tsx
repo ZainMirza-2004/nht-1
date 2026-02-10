@@ -18,6 +18,18 @@ interface BlogPost {
 
 const blogPosts: BlogPost[] = [
   {
+    id: '7',
+    slug: 'uk-travel-itch-best-trips',
+    title: 'The UK Travel Itch: Why the Best Trips Often Feel Like Coming Home',
+    excerpt: 'A reflective take on UK staycations, from London and Edinburgh slow moments to Northumberland beaches, pubs, and scenic detours.',
+    content: 'Full article content here...',
+    author: 'Liam Bennett',
+    date: '2026-02-10',
+    category: 'Travel',
+    imageUrl: '/homepage3.webp',
+    readTime: '8 min read',
+  },
+  {
     id: '1',
     slug: 'ultimate-guide-to-coastal-living',
     title: 'The Ultimate Guide to Coastal Living',
