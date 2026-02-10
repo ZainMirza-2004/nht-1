@@ -149,44 +149,12 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-5xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-6">
-            Luxury Stays, Thoughtfully Managed
-          </h2>
-          <p className="text-base md:text-lg text-gray-600 leading-relaxed mb-5">
-            NH&amp;T Estates curates luxury property stays for guests who value calm, privacy, and design.
-            Our portfolio spans Cardiff and London, pairing central locations with refined interiors,
-            premium bedding, and concierge-ready support. Whether you are planning a weekend escape,
-            a business trip, or a longer apartment booking, we make every detail feel effortless.
-          </p>
-          <p className="text-base md:text-lg text-gray-600 leading-relaxed mb-5">
-            Coastal booking options are available for guests who want the air, light, and pace of the
-            shoreline without compromising on comfort. Expect fast Wi-Fi, curated local guidance, and
-            a smooth check-in experience that respects your time. Every stay is designed to feel quiet
-            and considered, from arrival to departure.
-          </p>
-          <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-            If you are comparing luxury property options in Cardiff or London, explore our featured
-            spaces below. Each listing includes clear amenities, flexible stays, and a direct path to
-            book with confidence.
-          </p>
-        </div>
-      </section>
-
       {/* PROPERTIES */}
       <section id="properties" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-4xl font-serif text-center mb-12">
             Featured Properties
           </h2>
-          <p className="text-lg text-gray-600 text-center max-w-3xl mx-auto mb-10">
-            Discover luxury property stays designed for effortless coastal booking and refined city escapes.
-            From Cardiff to London, our curated apartments blend premium interiors, smart amenities, and
-            concierge-level hospitality. Whether you are planning a weekend retreat or a longer apartment
-            booking, NH&amp;T Estates offers thoughtfully selected spaces that feel private, polished, and
-            perfectly located.
-          </p>
 
           {loading ? (
             <div className="py-20 flex justify-center">
