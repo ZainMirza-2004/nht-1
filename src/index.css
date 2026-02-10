@@ -43,12 +43,12 @@
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
+/*h1, h2, h3, h4, h5, h6 {
     font-size: revert !important;
     font-weight: revert !important;
     margin-top: 10px !important;
     margin-bottom: 10px !important;
-}
+}*/
 
 a{
   color: rgb(0 61 122 / var(--tw-text-opacity, 1));
