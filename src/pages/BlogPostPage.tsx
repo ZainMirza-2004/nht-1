@@ -7,7 +7,7 @@ const blogPosts = [
     id: '1',
     slug: 'uk-travel-itch-best-trips',
     title: 'The UK Travel Itch: Why the Best Trips Often Feel Like Coming Home',
-    author: 'Liam Bennett',
+    author: 'Fatima Lotia',
     date: '2026-02-10',
     category: 'Travel',
     imageUrl: '/homepage3.webp',

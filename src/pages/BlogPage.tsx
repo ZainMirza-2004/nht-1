@@ -23,7 +23,7 @@ const blogPosts: BlogPost[] = [
     title: 'The UK Travel Itch: Why the Best Trips Often Feel Like Coming Home',
     excerpt: 'A reflective take on UK staycations, from London and Edinburgh slow moments to Northumberland beaches, pubs, and scenic detours.',
     content: 'Full article content here...',
-    author: 'Liam Bennett',
+    author: 'Fatima Lotia',
     date: '2026-02-10',
     category: 'Travel',
     imageUrl: '/homepage3.webp',
