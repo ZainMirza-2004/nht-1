@@ -101,7 +101,7 @@ function HomePage() {
   return (
     <div className="min-h-screen">
       <Seo
-        title="NH&T Estates - Luxury Coastal Property Management"
+        title="NH&T Estates - Luxury Airbnbs & Property Management"
         description="Experience unparalleled luxury with NH&T Estates. Premium coastal properties with world-class spa and cinema amenities."
         canonicalPath="/"
       />

@@ -1,4 +1,4 @@
-# NH&T Estates - Luxury Coastal Property Management
+# NH&T Estates - Luxury Airbnbs & Property Management
 
 ## Setup Instructions
 
