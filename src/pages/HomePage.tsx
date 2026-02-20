@@ -108,7 +108,7 @@ function HomePage() {
       {/* HERO */}
       <section className="relative h-screen overflow-hidden flex items-center justify-center">
         <picture className="absolute inset-0">
-          <source srcSet="/homepage2-768.webp" media="(max-width: 768px)" type="image/webp" />
+          <source srcSet="/homepage2.webp" media="(max-width: 768px)" type="image/webp" />
           <source srcSet="/homepage2.webp" type="image/webp" />
           <img
             src="/homepage2.webp"
