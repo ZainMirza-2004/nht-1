@@ -61,6 +61,15 @@ const testimonials: Testimonial[] = [
 
 const duplicatedTestimonials = [...testimonials, ...testimonials, ...testimonials];
 
+const FEATURED_PROPERTY_IMAGES = [
+  "/2bed.webp",
+  "/Property8.webp",
+  "/Property12.webp",
+  "/Property19.webp",
+  "/Property15.webp",
+  "/Property20.webp",
+];
+
 /* =======================
    Component
 ======================= */
@@ -86,7 +95,12 @@ function HomePage() {
         .limit(6);
 
       if (error) throw error;
-      setProperties((data ?? []) as Property[]);
+      const list = (data ?? []) as Property[];
+      const withImages = list.map((p, i) => ({
+        ...p,
+        image_url: FEATURED_PROPERTY_IMAGES[i] ?? p.image_url,
+      }));
+      setProperties(withImages);
     } catch (err) {
       console.error(err);
     } finally {
