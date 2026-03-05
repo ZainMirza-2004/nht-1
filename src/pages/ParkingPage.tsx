@@ -303,6 +303,14 @@ export default function ParkingPage() {
         title="Parking & Transport | NH&T Estates"
         description="Seamless arrivals with valet, secure parking, and transport coordination for every stay."
         canonicalPath="/parking"
+        keywords={[
+          'parking permit',
+          'guest parking',
+          'secure parking',
+          'Cardiff parking',
+          'property parking',
+          'arrival services',
+        ]}
       />
       <style>{`
         @keyframes fadeInUp {

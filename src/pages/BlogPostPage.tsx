@@ -12,6 +12,15 @@ const blogPosts = [
     category: 'Travel',
     imageUrl: '/cardiff.webp',
     readTime: '5 min read',
+    keywords: [
+      'Cardiff travel',
+      'best places to visit in Cardiff',
+      'Cardiff Castle',
+      'Cardiff Bay',
+      'Bute Park',
+      'Wales travel guide',
+      'Cardiff attractions',
+    ],
     content: `
       <h2>Discovering Cardiff</h2>
       <p>Cardiff, the vibrant capital of Wales, is a city where history meets modern energy. Small yet culturally rich, it offers medieval castles, <a href="/properties"><i><strong>premium residencies</strong></i></a>, shopping arcades, sprawling green parks, waterfront views, and a stadium atmosphere that rivals major European capitals.</p>
@@ -64,6 +73,15 @@ const blogPosts = [
     category: 'Travel',
     imageUrl: '/homepage3.webp',
     readTime: '8 min read',
+    keywords: [
+      'UK staycation',
+      'slow travel',
+      'London travel',
+      'Edinburgh travel',
+      'Northumberland beaches',
+      'UK road trip',
+      'British countryside',
+    ],
     content: `
       <p>There's this specific kind of relief, the one that hits when you finally decide to stay in the UK for a getaway. Just you, an over-packed suitcase, and a train journey that lasts exactly long enough for your hustling thoughts to slow down and go on vacation mode.</p>
 
@@ -115,16 +133,28 @@ export default function BlogPostPage() {
   const baseTitle = 'NH&T Estates';
   const baseDescription =
     'Stories and insights on luxury coastal living, wellness, and curated experiences.';
+  const baseKeywords = [
+    'NH&T Estates',
+    'travel journal',
+    'luxury stays',
+    'UK travel',
+  ];
   const plainText = post ? toPlainText(post.content) : '';
   const description =
     plainText.length > 160 ? `${plainText.slice(0, 157)}...` : plainText || baseDescription;
   const title = post ? `${post.title} | Journal | ${baseTitle}` : `Journal | ${baseTitle}`;
   const canonicalPath = post ? `/blog/${post.slug}` : '/blog';
+  const keywords = post ? [...baseKeywords, post.category, ...post.keywords] : baseKeywords;
 
   if (!post) {
     return (
       <div className="min-h-screen pt-20 flex items-center justify-center">
-        <Seo title={title} description={description} canonicalPath={canonicalPath} />
+        <Seo
+          title={title}
+          description={description}
+          canonicalPath={canonicalPath}
+          keywords={keywords}
+        />
         <div className="text-center">
           <h1 className="text-4xl font-serif text-gray-900 mb-4">Post Not Found</h1>
           <Link to="/blog" className="text-blue-900 hover:underline">
@@ -137,7 +167,12 @@ export default function BlogPostPage() {
 
   return (
     <div className="min-h-screen pt-20 bg-gray-50">
-      <Seo title={title} description={description} canonicalPath={canonicalPath} />
+      <Seo
+        title={title}
+        description={description}
+        canonicalPath={canonicalPath}
+        keywords={keywords}
+      />
       <article>
         <div className="relative h-96 md:h-[500px] overflow-hidden">
           <img

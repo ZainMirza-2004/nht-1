@@ -21,7 +21,7 @@ const blogPosts: BlogPost[] = [
     id: '2',
     slug: 'best-places-to-visit-in-cardiff',
     title: 'Visit Cardiff: Best Places to Visit in Cardiff',
-    excerpt: 'A local-friendly guide to Cardiff’s castles, markets, parks, waterfronts, and culture, from iconic landmarks to relaxed city escapes.',
+    excerpt: "A local-friendly guide to Cardiff's castles, markets, parks, waterfronts, and culture, from iconic landmarks to relaxed city escapes.",
     content: 'Full article content here...',
     author: 'NH&T Estates',
     date: '2026-03-05',
@@ -59,6 +59,19 @@ export default function BlogPage() {
         title="Journal | NH&T Estates"
         description="Stories and insights on luxury coastal living, wellness, and curated experiences."
         canonicalPath="/blog"
+        keywords={[
+          'NH&T Estates blog',
+          'luxury travel',
+          'Cardiff travel',
+          'UK staycations',
+          'wellness travel',
+          'coastal living',
+          'lifestyle',
+          'entertainment',
+          'sustainability',
+          'design',
+          'hospitality insights',
+        ]}
       />
       <section className="bg-white py-16 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

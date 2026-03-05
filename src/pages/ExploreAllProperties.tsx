@@ -338,6 +338,16 @@ export default function ExploreAllProperties() {
         title="NH&T Estates - Explore All Properties"
         description="Browse the full NH&T Estates collection of luxury properties, from Cardiff to London. Filter by location and price to find the perfect stay."
         canonicalPath="/properties"
+        keywords={[
+          'luxury properties',
+          'Cardiff apartments',
+          'London apartments',
+          'serviced apartments',
+          'short stay rentals',
+          'holiday lets',
+          'city centre stays',
+          'NH&T Estates properties',
+        ]}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">

@@ -118,6 +118,16 @@ function HomePage() {
         title="NH&T Estates - Luxury Airbnbs & Property Management"
         description="Experience unparalleled luxury with NH&T Estates. Premium coastal properties with world-class spa and cinema amenities."
         canonicalPath="/"
+        keywords={[
+          'luxury stays',
+          'serviced apartments Cardiff',
+          'coastal properties',
+          'luxury airbnbs',
+          'property management',
+          'private spa',
+          'private cinema',
+          'Cardiff accommodation',
+        ]}
       />
       {/* HERO */}
       <section className="relative h-screen overflow-hidden flex items-center justify-center">

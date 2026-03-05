@@ -351,6 +351,16 @@ export default function SpaPage() {
         title="Luxurious Spa | NH&T Estates"
         description="Indulge in bespoke spa experiences with private suites, expert therapists, and curated wellness rituals."
         canonicalPath="/spa"
+        keywords={[
+          'private spa Cardiff',
+          'luxury spa',
+          'spa booking',
+          'hot tub',
+          'sauna',
+          'cold plunge',
+          'wellness retreat',
+          'private spa suite',
+        ]}
       />
       <style>{`
         @keyframes fadeInUp {

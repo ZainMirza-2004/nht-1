@@ -364,6 +364,15 @@ export default function CinemaPage() {
         title="Private Cinema | NH&T Estates"
         description="Enjoy private cinema bookings with premium seating, immersive sound, and concierge-ready amenities."
         canonicalPath="/cinema"
+        keywords={[
+          'private cinema Cardiff',
+          'cinema booking',
+          'movie night',
+          'premium cinema room',
+          'gaming lounge',
+          'Netflix cinema',
+          'private screening',
+        ]}
       />
       <style>{`
         @keyframes fadeInUp {
