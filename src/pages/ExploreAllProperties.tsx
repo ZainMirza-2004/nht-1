@@ -4,6 +4,7 @@ import FilterPill, { FilterState } from '../components/FilterPill';
 import PropertyGroup from '../components/PropertyGroup';
 import Seo from '../components/Seo';
 
+/** Booking links (airbnb_url) must be the current live URL from Airbnb or Uplisting. If a link 404s, get the new URL from the platform and update it here. */
 const mockProperties: Property[] = [
   {
     id: '1',

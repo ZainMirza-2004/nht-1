@@ -24,6 +24,24 @@ export const normalizeLocation = (location: string): string => {
   return location;
 };
 
+/** Fix double-encoded path segments (e.g. %2526 → %26) on Uplisting/bookeddirectly URLs to avoid 404s. */
+export function normalizeBookingUrl(url: string): string {
+  try {
+    if (!url.includes('bookeddirectly.com')) return url;
+    const u = new URL(url);
+    const pathDecoded = u.pathname
+      .split('/')
+      .map((seg) =>
+        seg.replace(/%25([0-9A-Fa-f]{2})/g, (_, hex) => '%' + hex)
+      )
+      .join('/');
+    u.pathname = pathDecoded;
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
 interface PropertyCardProps {
   property: Property;
 }
@@ -84,7 +102,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         <a
-          href={property.airbnb_url}
+          href={normalizeBookingUrl(property.airbnb_url)}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full bg-blue-900 text-white text-center py-3 px-4 rounded-lg font-medium hover:bg-blue-800 transition-colors duration-200 mt-auto"
