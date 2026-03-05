@@ -4,6 +4,58 @@ import Seo from '../components/Seo';
 
 const blogPosts = [
   {
+    id: '2',
+    slug: 'best-places-to-visit-in-cardiff',
+    title: 'Visit Cardiff: Best Places to Visit in Cardiff',
+    author: 'NH&T Estates',
+    date: '2026-03-05',
+    category: 'Travel',
+    imageUrl: '/cardiff.webp',
+    readTime: '5 min read',
+    content: `
+      <h2>Discovering Cardiff</h2>
+      <p>Cardiff, the vibrant capital of Wales, is a city where history meets modern energy. Small yet culturally rich, it offers medieval castles, <a href="/properties"><i><strong>premium residencies</strong></i></a>, shopping arcades, sprawling green parks, waterfront views, and a stadium atmosphere that rivals major European capitals.</p>
+      <br/><p>Whether you are visiting for a weekend getaway or planning a longer stay, Cardiff has a way of surprising you in the most unexpected ways. Here is a guide to the best places to visit that capture the city's unique soul, from iconic landmarks to the local spots that make Cardiff feel at home.</p>
+
+      <h2>Cardiff Castle</h2>
+      <p>No visit to Cardiff is complete without stepping inside Cardiff Castle, the city's defining landmark. Located in the heart of the city, this remarkable site blends nearly 2,000 years of history within its walls.</p>
+      <br/><p>Originally built by the Romans, later developed by the Normans, and lavishly redesigned during the Victorian era, the castle offers a journey through time. Climb the Norman Keep for panoramic city views and explore the richly decorated Victorian Gothic interiors designed by William Burges. Outside, the spacious grounds are a peaceful green retreat in the middle of the city.</p>
+      <br/><p>Cardiff Castle is more than a monument. It is a symbol of Welsh heritage that is regarded as one of a kind.</p>
+
+      <h2>St David's Shopping Centre</h2>
+      <p>For those who enjoy retail therapy or simply a lively city atmosphere, St David's Shopping Centre is a must-visit. As one of the UK's largest shopping destinations, it combines major international brands with popular high street stores.</p>
+      <br/><p>The center is also home to a variety of restaurants and cafes, making it ideal for a relaxed afternoon break. Its modern architecture contrasts beautifully with Cardiff's historic arcades nearby, highlighting how the city blends tradition with contemporary life.</p>
+
+      <h2>Cardiff Market</h2>
+      <p>Cardiff Market is where visitors experience the authentic local side of the city. This Victorian indoor market has served the community since the 19th century and remains full of character and energy.</p>
+      <br/><p>From fresh produce and Welsh delicacies to handmade crafts and vintage finds, the market offers a little bit of everything. Tourists often recommend stopping here to try traditional Welsh cakes or browse the many stalls while the friendly atmosphere and historic iron balconies make it a memorable stop.</p>
+
+      <h2>Bute Park</h2>
+      <p>Often referred to as the green heart of <a href="https://en.wikipedia.org/wiki/Cardiff" target="_blank"><i>Cardiff</i></a>, Bute Park stretches alongside the River Taff and offers a peaceful escape just steps away from the city center.</p>
+      <br/><p>Locals love it for morning runs, weekend picnics, and quiet walks among beautifully preserved gardens. In spring and summer, the park bursts with color, while autumn brings golden leaves that transform the landscape.</p>
+
+      <h2>Principality Stadium</h2>
+      <p>The Principality Stadium is one of the city's most iconic modern landmarks. Home to major rugby matches, international sporting events, and world-class concerts, it plays a central role in Cardiff's energetic atmosphere.</p>
+      <br/><p>With a capacity of over 70,000 and a retractable roof, the stadium creates an unforgettable experience. On event days, the entire city comes alive as restaurants fill up, streets buzz, and there is a powerful sense of unity among fans. Even outside match days, guided tours offer a fascinating behind-the-scenes look.</p>
+
+      <h2>Cardiff Bay</h2>
+      <p>Cardiff Bay is one of the most popular areas for visitors seeking scenic views and waterfront dining. Once a historic dockland, it has transformed into a vibrant leisure district.</p>
+      <br/><p>Here, you can enjoy waterside restaurants, boat tours, and cultural attractions. The relaxed atmosphere makes it perfect for an evening stroll, especially at sunset when the bay reflects the city lights.</p>
+
+      <h2>National Museum Cardiff</h2>
+      <p>For art and history enthusiasts, the <a href="https://museum.wales/cardiff/" target="_blank"><i>National Museum Cardiff</i></a> is highly recommended. Admission is free, making it both accessible and impressive with no hidden costs.</p>
+      <br/><p>The museum houses a renowned collection of Impressionist art alongside exhibitions covering Welsh history, natural science, and archaeology. It is a quieter yet enriching experience that adds depth to your understanding of Wales and its cultural heritage.</p>
+
+      <h2>Roath Park</h2>
+      <p>Another local favorite is Roath Park, known for its large lake and iconic lighthouse-style memorial. It is slightly outside the city center but well worth the visit.</p>
+      <br/><p>The park is especially popular among families looking for a scenic, peaceful environment. Walking around the lake or simply sitting by the water offers a refreshing break from sightseeing.</p>
+
+      <h2>The Verdict</h2>
+      <p>Cardiff's true charm lies in its diversity. In one trip, you can explore ancient stone walls, browse a bustling historic market, and experience the roar of a world-class stadium.</p>
+      <br/><p>It is a city that feels welcoming and vibrant without ever becoming overwhelming, a place where history, food, and community spirit blend seamlessly.</p>
+    `,
+  },
+  {
     id: '1',
     slug: 'uk-travel-itch-best-trips',
     title: 'The UK Travel Itch: Why the Best Trips Often Feel Like Coming Home',

@@ -18,6 +18,18 @@ interface BlogPost {
 
 const blogPosts: BlogPost[] = [
   {
+    id: '2',
+    slug: 'best-places-to-visit-in-cardiff',
+    title: 'Visit Cardiff: Best Places to Visit in Cardiff',
+    excerpt: 'A local-friendly guide to Cardiff’s castles, markets, parks, waterfronts, and culture, from iconic landmarks to relaxed city escapes.',
+    content: 'Full article content here...',
+    author: 'NH&T Estates',
+    date: '2026-03-05',
+    category: 'Travel',
+    imageUrl: '/cardiff.webp',
+    readTime: '5 min read',
+  },
+  {
     id: '1',
     slug: 'uk-travel-itch-best-trips',
     title: 'The UK Travel Itch: Why the Best Trips Often Feel Like Coming Home',
