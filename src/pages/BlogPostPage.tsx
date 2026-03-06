@@ -4,6 +4,78 @@ import Seo from '../components/Seo';
 
 const blogPosts = [
   {
+    id: '3',
+    slug: 'top-10-best-luxury-hotels-in-the-uk',
+    title: 'Top 10 Best Luxury Hotels in the UK',
+    author: 'NH&T Estates',
+    date: '2026-03-06',
+    category: 'Travel',
+    imageUrl: '/homepage2.webp',
+    readTime: '7 min read',
+    keywords: [
+      'luxury hotels in the UK',
+      'best luxury hotels UK',
+      'The Ritz London',
+      'The Savoy',
+      "Claridge's",
+      'Gleneagles',
+      'The Connaught',
+      'UK luxury travel',
+      'top hotels',
+      'hotel in uk',
+      'best hotels'
+    ],
+    content: `
+      <h2>Top 10 Best Luxury Hotels in the UK</h2>
+      <p>The UK is home to some of the world's most celebrated luxury hotels: places where history, elegance, and exceptional service come together to create unforgettable stays. From royal-inspired grandeur in London to countryside retreats surrounded by rolling hills, there is a refined hospitality experience for every kind of traveller.</p>
+      <br/><p>Whether you are planning a city break, a wellness escape, or a rural retreat, these ten properties consistently impress guests from around the world.</p>
+
+      <h2>1. The Ritz London</h2>
+      <p>Few hotels symbolize British luxury like The Ritz London. Overlooking Green Park, this iconic hotel has defined glamour since 1906.</p>
+      <br/><p>Known for opulent interiors, chandeliers, and impeccable afternoon tea, The Ritz offers timeless elegance with world-class dining, refined suites, and service that feels both discreet and deeply attentive.</p>
+
+      <h2>2. The Savoy</h2>
+      <p>Situated along the River Thames, The Savoy blends Edwardian and Art Deco design with contemporary sophistication. It has welcomed royalty, celebrities, and global leaders for well over a century.</p>
+      <br/><p>Its famous restaurants and bars, including Savoy Grill, elevate every stay with a strong sense of place and history.</p>
+
+      <h2>3. Claridge's</h2>
+      <p>In Mayfair, Claridge's remains the definition of understated luxury. Art Deco interiors, spacious suites, and renowned afternoon tea make it a long-standing favourite among discerning travellers.</p>
+      <br/><p>The atmosphere is polished yet warm, with service that feels personal from arrival to departure.</p>
+
+      <h2>4. The Dorchester</h2>
+      <p>Overlooking Hyde Park, The Dorchester is a landmark of refined British hospitality. With Michelin-starred dining, a world-class spa, and lavish interiors, it delivers a seamless blend of tradition and modern comfort.</p>
+      <br/><p>The hotel is especially known for highly attentive service and consistently elevated experiences.</p>
+
+      <h2>5. The Balmoral</h2>
+      <p>In Edinburgh, The Balmoral stands proudly beneath its iconic clock tower. Combining Scottish heritage with contemporary luxury, it offers sweeping views and immediate access to the historic Royal Mile.</p>
+      <br/><p>Its dining and wellness experiences add another layer to one of Scotland's most distinctive city stays.</p>
+
+      <h2>6. Gleneagles Hotel</h2>
+      <p>Set within 850 acres of countryside in Perthshire, Gleneagles is more than a hotel; it is a luxury estate experience.</p>
+      <br/><p>Known for championship golf, acclaimed <a href="/spa"><i><strong>spa treatments</strong></i></a>, and beautifully curated interiors, it balances adventure and indulgence with ease.</p>
+
+      <h2>7. Chewton Glen</h2>
+      <p>Nestled on the edge of the New Forest, Chewton Glen is a countryside retreat celebrated for privacy and elegance.</p>
+      <br/><p>With luxurious suites, unique treehouse accommodation, and excellent dining, it is a popular choice for romantic getaways and wellness-focused stays.</p>
+
+      <h2>8. The Lanesborough</h2>
+      <p>Overlooking Hyde Park Corner, The Lanesborough delivers Regency style with modern butler service for every suite.</p>
+      <br/><p>Its exclusivity, personalized attention, and enduring reputation make it one of London's most prestigious addresses.</p>
+
+      <h2>9. Coworth Park</h2>
+      <p>Located in Ascot, Coworth Park offers a contemporary countryside escape just outside London. Surrounded by parkland, it combines relaxed luxury with Michelin-starred dining and an eco-focused spa.</p>
+      <br/><p>It is ideal for guests seeking peace without sacrificing sophistication.</p>
+
+      <h2>10. The Connaught</h2>
+      <p>In the heart of Mayfair, The Connaught is known for quiet elegance and exceptional culinary standards. Michelin-starred restaurants and its world-renowned cocktail bar continue to attract well-travelled guests who value privacy and excellence.</p>
+      <br/><p>The result is classic London luxury with a contemporary edge.</p>
+
+      <h2>Final Thoughts</h2>
+      <p>Luxury in the UK is not defined by extravagance alone; it is shaped by heritage, craftsmanship, and detail. These hotels offer more than places to stay. They create immersive experiences through architecture, gastronomy, and service excellence.</p>
+      <br/><p>From the energy of London's grand hotels to the serenity of countryside retreats, the UK offers refined options for every taste. If you are planning your next premium stay, explore our <a href="/properties"><i><strong>carefully curated residencies</strong></i></a> for a similarly elevated standard of comfort and hospitality.</p>
+    `,
+  },
+  {
     id: '2',
     slug: 'best-places-to-visit-in-cardiff',
     title: 'Visit Cardiff: Best Places to Visit in Cardiff',
@@ -173,7 +245,7 @@ export default function BlogPostPage() {
         canonicalPath={canonicalPath}
         keywords={keywords}
       />
-      <article>
+      <article className='blog-page-single'>
         <div className="relative h-96 md:h-[500px] overflow-hidden">
           <img
             src={post.imageUrl}
@@ -221,7 +293,7 @@ export default function BlogPostPage() {
             </Link>
 
             <div
-              className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-900 prose-a:no-underline hover:prose-a:underline"
+              className="blog-content prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-900 prose-a:no-underline hover:prose-a:underline"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
           </div>

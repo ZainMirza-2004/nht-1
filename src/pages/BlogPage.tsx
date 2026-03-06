@@ -18,6 +18,18 @@ interface BlogPost {
 
 const blogPosts: BlogPost[] = [
   {
+    id: '3',
+    slug: 'top-10-best-luxury-hotels-in-the-uk',
+    title: 'Top 10 Best Luxury Hotels in the UK',
+    excerpt: 'From The Ritz and The Savoy to Gleneagles and The Connaught, explore ten best luxury UK hotels known for heritage, elegance, and exceptional service.',
+    content: 'Full article content here...',
+    author: 'NH&T Estates',
+    date: '2026-03-06',
+    category: 'Travel',
+    imageUrl: '/homepage2.webp',
+    readTime: '7 min read',
+  },
+  {
     id: '2',
     slug: 'best-places-to-visit-in-cardiff',
     title: 'Visit Cardiff: Best Places to Visit in Cardiff',
