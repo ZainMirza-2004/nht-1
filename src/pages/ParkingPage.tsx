@@ -11,13 +11,30 @@ import { formatPhoneToE164, formatPhoneForDisplay, getPhoneValidationError } fro
 
 type PermitType = 'free' | 'paid';
 
+type PendingPermitData = {
+  fullName: string;
+  email: string;
+  phone: string;
+  vehicleMake: string;
+  registration: string;
+  propertyName: string;
+  permitType: PermitType;
+  permitDate: string;
+  numberOfNights: number;
+};
+
+function errMsg(error: unknown, fallback: string): string {
+  return error instanceof Error ? error.message : fallback;
+}
+
 export default function ParkingPage() {
   const [loading, setLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [showStripeCheckout, setShowStripeCheckout] = useState(false);
-  const [pendingPermitData, setPendingPermitData] = useState<any>(null);
+  const [pendingPermitData, setPendingPermitData] =
+    useState<PendingPermitData | null>(null);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -62,54 +79,50 @@ export default function ParkingPage() {
       }
 
       return await response.json();
-    } catch (error: any) {
-      throw new Error(error.message || 'Failed to send verification code');
+    } catch (error: unknown) {
+      throw new Error(errMsg(error, 'Failed to send verification code'));
     }
   };
 
   const handleOTPVerify = async (code: string): Promise<boolean> => {
-    try {
-      // Format phone number to E.164 before sending
-      const formattedPhone = formatPhoneToE164(formData.phone);
-      if (!formattedPhone) {
-        const errorMsg = getPhoneValidationError(formData.phone);
-        throw new Error(errorMsg || 'Invalid phone number format');
-      }
-
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      if (!supabaseUrl || supabaseUrl.includes('placeholder')) {
-        throw new Error('Supabase is not configured.');
-      }
-
-      const response = await fetch(`${supabaseUrl}/functions/v1/verify-parking-otp`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          phoneNumber: formattedPhone,
-          code: code,
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Invalid verification code');
-      }
-
-      const result = await response.json();
-      
-      if (result.verified) {
-        // Now submit the permit request
-        await submitFreePermitRequest();
-        return true;
-      }
-      
-      return false;
-    } catch (error: any) {
-      throw error;
+    const formattedPhone = formatPhoneToE164(formData.phone);
+    if (!formattedPhone) {
+      const errorMsg = getPhoneValidationError(formData.phone);
+      throw new Error(errorMsg || 'Invalid phone number format');
     }
+
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    if (!supabaseUrl || supabaseUrl.includes('placeholder')) {
+      throw new Error('Supabase is not configured.');
+    }
+
+    const response = await fetch(`${supabaseUrl}/functions/v1/verify-parking-otp`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        phoneNumber: formattedPhone,
+        code: code,
+      }),
+    });
+
+    if (!response.ok) {
+      const errBody = (await response.json().catch(() => ({}))) as {
+        message?: string;
+      };
+      throw new Error(errBody.message || 'Invalid verification code');
+    }
+
+    const result = (await response.json()) as { verified?: boolean };
+
+    if (result.verified) {
+      await submitFreePermitRequest();
+      return true;
+    }
+
+    return false;
   };
 
   const submitFreePermitRequest = async () => {
@@ -170,8 +183,8 @@ export default function ParkingPage() {
       } else {
         throw new Error(result.message || 'Failed to submit request');
       }
-    } catch (error: any) {
-      setErrorMessage(error.message || 'Failed to submit request');
+    } catch (error: unknown) {
+      setErrorMessage(errMsg(error, 'Failed to submit request'));
       setSubmitStatus('error');
       setShowOTPModal(false);
     }
@@ -204,8 +217,8 @@ export default function ParkingPage() {
         await handleOTPRequest();
         setPendingPermitData({ ...formData });
         setShowOTPModal(true);
-      } catch (error: any) {
-        setErrorMessage(error.message || 'Failed to send verification code');
+      } catch (error: unknown) {
+        setErrorMessage(errMsg(error, 'Failed to send verification code'));
         setSubmitStatus('error');
       } finally {
         setLoading(false);
@@ -218,14 +231,19 @@ export default function ParkingPage() {
   };
 
   const handlePaidPermitSuccess = async () => {
+    if (!pendingPermitData) {
+      setErrorMessage('Missing permit data');
+      setSubmitStatus('error');
+      return;
+    }
+    const permit = pendingPermitData;
     try {
-      // Format phone number to E.164 before sending
-      const formattedPhone = pendingPermitData.phone 
-        ? formatPhoneToE164(pendingPermitData.phone)
+      const formattedPhone = permit.phone
+        ? formatPhoneToE164(permit.phone)
         : '';
-      
-      if (pendingPermitData.phone && !formattedPhone) {
-        const errorMsg = getPhoneValidationError(pendingPermitData.phone);
+
+      if (permit.phone && !formattedPhone) {
+        const errorMsg = getPhoneValidationError(permit.phone);
         throw new Error(errorMsg || 'Invalid phone number format');
       }
 
@@ -241,14 +259,14 @@ export default function ParkingPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fullName: pendingPermitData.fullName,
-          email: pendingPermitData.email,
+          fullName: permit.fullName,
+          email: permit.email,
           phone: formattedPhone || '',
-          vehicleMake: pendingPermitData.vehicleMake,
-          registration: pendingPermitData.registration,
-          propertyName: pendingPermitData.propertyName,
-          permitDate: pendingPermitData.permitDate,
-          numberOfNights: pendingPermitData.numberOfNights,
+          vehicleMake: permit.vehicleMake,
+          registration: permit.registration,
+          propertyName: permit.propertyName,
+          permitDate: permit.permitDate,
+          numberOfNights: permit.numberOfNights,
         }),
       });
 
@@ -273,23 +291,23 @@ export default function ParkingPage() {
       }
       
       // Add permit details to URL as fallback (in case database lookup fails)
-      if (pendingPermitData) {
-        confirmationUrl.searchParams.set('fullName', encodeURIComponent(pendingPermitData.fullName || ''));
-        confirmationUrl.searchParams.set('email', encodeURIComponent(pendingPermitData.email || ''));
-        confirmationUrl.searchParams.set('propertyName', encodeURIComponent(pendingPermitData.propertyName || ''));
-        confirmationUrl.searchParams.set('permitDate', encodeURIComponent(pendingPermitData.permitDate || ''));
-        confirmationUrl.searchParams.set('numberOfNights', String(pendingPermitData.numberOfNights || 1));
+      {
+        confirmationUrl.searchParams.set('fullName', encodeURIComponent(permit.fullName || ''));
+        confirmationUrl.searchParams.set('email', encodeURIComponent(permit.email || ''));
+        confirmationUrl.searchParams.set('propertyName', encodeURIComponent(permit.propertyName || ''));
+        confirmationUrl.searchParams.set('permitDate', encodeURIComponent(permit.permitDate || ''));
+        confirmationUrl.searchParams.set('numberOfNights', String(permit.numberOfNights || 1));
         if (result.permitId) {
           confirmationUrl.searchParams.set('permitId', result.permitId);
         }
       }
-      
+
       setPendingPermitData(null);
       
       // Redirect to confirmation page
       window.location.href = confirmationUrl.toString();
-    } catch (error: any) {
-      setErrorMessage(error.message || 'Failed to create permit');
+    } catch (error: unknown) {
+      setErrorMessage(errMsg(error, 'Failed to create permit'));
       setSubmitStatus('error');
       setShowStripeCheckout(false);
     }

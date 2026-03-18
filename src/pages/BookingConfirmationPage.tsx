@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CheckCircle2, Calendar, Clock, MapPin, Mail, Phone } from 'lucide-react';
+import type { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
 import Seo from '../components/Seo';
@@ -77,19 +78,36 @@ export default function BookingConfirmationPage() {
           registration?: string | null;
           number_of_nights?: number | null;
           email_sent?: boolean | null;
-          [key: string]: any; // Allow other fields
         };
-        
-        let data: SpaBooking | CinemaBooking | ParkingPermit | null = null;
-        let fetchError: any = null;
-        let permitDataFromBookingId: any = null; // Declare outside to use in fallback
 
-        // Check if bookingId is JSON (for parking permits)
+        type PermitUrlPayload = {
+          fullName: string;
+          email: string;
+          phone?: string;
+          permitDate: string;
+          propertyName?: string;
+          vehicleMake?: string;
+          registration?: string;
+          numberOfNights?: number;
+        };
+
+        let data: SpaBooking | CinemaBooking | ParkingPermit | null = null;
+        let fetchError: PostgrestError | Error | null = null;
+        let permitDataFromBookingId: PermitUrlPayload | null = null;
+
         if (serviceType === 'parking' && bookingId) {
           try {
-            permitDataFromBookingId = JSON.parse(bookingId);
+            const raw = JSON.parse(bookingId) as unknown;
+            if (
+              raw &&
+              typeof raw === 'object' &&
+              'fullName' in raw &&
+              'email' in raw &&
+              'permitDate' in raw
+            ) {
+              permitDataFromBookingId = raw as PermitUrlPayload;
+            }
           } catch {
-            // Not JSON, treat as regular bookingId
             permitDataFromBookingId = null;
           }
         }
@@ -121,17 +139,6 @@ export default function BookingConfirmationPage() {
           data = result.data as CinemaBooking | null;
           fetchError = result.error;
         } else if (serviceType === 'parking') {
-          // Check if bookingId is JSON (permit data passed from Stripe)
-          let permitDataFromBookingId: any = null;
-          if (bookingId) {
-            try {
-              permitDataFromBookingId = JSON.parse(bookingId);
-            } catch {
-              // Not JSON, treat as regular bookingId
-              permitDataFromBookingId = null;
-            }
-          }
-
           if (permitId) {
             const result = await supabase
               .from('parking_permit_requests')
@@ -246,9 +253,8 @@ export default function BookingConfirmationPage() {
                   data = fallbackData;
                   fetchError = null;
                 }
-              } catch (createError: any) {
+              } catch (createError: unknown) {
                 console.error('Error creating permit:', createError);
-                // If creation failed, use permit data from JSON as fallback
                 if (permitDataFromBookingId) {
                   const fallbackData: ParkingPermit = {
                     id: 'pending',
@@ -265,7 +271,10 @@ export default function BookingConfirmationPage() {
                   data = fallbackData;
                   fetchError = null;
                 } else {
-                  fetchError = createError;
+                  fetchError =
+                    createError instanceof Error
+                      ? createError
+                      : new Error(String(createError));
                 }
               }
             } else {
@@ -411,7 +420,7 @@ export default function BookingConfirmationPage() {
             console.log('📧 Email already sent for this booking');
           }
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching booking:', err);
         setError('Failed to load booking details');
       } finally {
@@ -474,7 +483,7 @@ export default function BookingConfirmationPage() {
 
       const result = await response.json();
       console.log('✅ Confirmation email sent successfully:', result);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error sending confirmation email:', error);
       throw error;
     }

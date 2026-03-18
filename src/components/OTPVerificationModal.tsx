@@ -57,8 +57,10 @@ export default function OTPVerificationModal({
           inputRef.current.focus();
         }
       }
-    } catch (err: any) {
-      setError(err.message || 'Verification failed. Please try again.');
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error ? err.message : 'Verification failed. Please try again.'
+      );
       setCode('');
     } finally {
       setIsVerifying(false);
@@ -75,8 +77,10 @@ export default function OTPVerificationModal({
     try {
       await onResend();
       setResendCooldown(60); // 60 second cooldown
-    } catch (err: any) {
-      setError(err.message || 'Failed to resend code. Please try again.');
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to resend code. Please try again.'
+      );
     } finally {
       setIsResending(false);
     }

@@ -1,3 +1,4 @@
+import type { PostgrestError } from '@supabase/supabase-js';
 import { lazy, Suspense, useState, useEffect, FormEvent } from 'react';
 import { Clock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -10,6 +11,7 @@ import SuccessModal from '../components/SuccessModal';
 import DatePicker from '../components/DatePicker';
 import ExperienceTierSelector, { type ExperienceTier, type TierOption } from '../components/ExperienceTierSelector';
 import Seo from '../components/Seo';
+import AmenityCarousel from '../components/AmenityCarousel';
 const StripeCheckout = lazy(() => import('../components/StripeCheckout'));
 
 type CinemaBookingRow = Database['public']['Tables']['cinema_bookings']['Row'];
@@ -79,6 +81,12 @@ const timeSlots = [
   '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM',
   '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
   '06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM',
+];
+
+const CINEMA_CAROUSEL_IMAGES = [
+  "/cinema1.webp",
+  "/cinema2.webp",
+  "/cinema3.webp",
 ];
 
 export default function CinemaPage() {
@@ -314,11 +322,14 @@ export default function CinemaPage() {
         status: 'pending', // Will be updated to 'paid' after successful payment
       };
 
-      const insertResult = await (supabase
+      const insertResult = (await supabase
         .from('cinema_bookings')
-        .insert(bookingData as any)
+        .insert(bookingData as never)
         .select()
-        .single()) as { data: CinemaBookingRow | null; error: any };
+        .single()) as {
+        data: CinemaBookingRow | null;
+        error: PostgrestError | null;
+      };
       
       const insertedData = insertResult.data;
       const insertError = insertResult.error;
@@ -336,15 +347,20 @@ export default function CinemaPage() {
       setPendingBookingId(insertedData.id);
       setShowStripeCheckout(true);
       setLoading(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error submitting booking:', error);
-      
-      const errorMsg = error?.message || error?.error?.message || 'Something went wrong. Please try again.';
+
+      const errorMsg =
+        error instanceof Error
+          ? error.message
+          : 'Something went wrong. Please try again.';
       setErrorMessage(errorMsg);
       setSubmitStatus('error');
-      
-      // Show specific error message if available
-      if (error.message && error.message.includes('no longer available')) {
+
+      if (
+        error instanceof Error &&
+        error.message.includes('no longer available')
+      ) {
         // Refresh slots and clear selection
         if (formData.date) {
           fetchUnavailableSlots(formData.date);
@@ -510,6 +526,13 @@ export default function CinemaPage() {
           </div>
         </div>
       </section>
+
+      <AmenityCarousel
+        images={CINEMA_CAROUSEL_IMAGES}
+        bookingPath="/cinema"
+        bookingLabel="Reserve Cinema"
+        sectionTitle="Cinema Experiences"
+      />
 
       {selectedTier && selectedTierDetails && (
         <section id="booking-form" className="py-32 bg-gradient-to-b from-stone-50 to-white">
@@ -687,8 +710,13 @@ export default function CinemaPage() {
                       experienceTier: selectedTier,
                     }),
                   });
-                } catch (emailError: any) {
-                  console.warn("Email sending failed:", emailError.message);
+                } catch (emailError: unknown) {
+                  console.warn(
+                    'Email sending failed:',
+                    emailError instanceof Error
+                      ? emailError.message
+                      : emailError
+                  );
                 }
               }
 

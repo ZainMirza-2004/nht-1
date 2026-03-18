@@ -8,13 +8,13 @@ interface PropertyGroupProps {
 }
 
 export default function PropertyGroup({ city, properties }: PropertyGroupProps) {
-  if (properties.length === 0) return null;
-
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const scrollByAmount = (amount: number) => {
     scrollerRef.current?.scrollBy({ left: amount, behavior: 'smooth' });
   };
   const SCROLL_AMOUNT = 360;
+
+  if (properties.length === 0) return null;
 
   return (
     <div className="mb-16">
