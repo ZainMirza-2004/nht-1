@@ -220,19 +220,22 @@ function HomePage() {
           <p className="text-xl md:text-2xl mb-10">
             Experience unparalleled comfort in Cardiff
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="mx-auto flex w-full max-w-[280px] flex-col gap-4 sm:max-w-none sm:flex-row sm:justify-center">
             <Button
               size="lg"
-              className="flex"
-              style={{alignItems:'center'}}
+              className="flex w-full justify-center sm:w-auto"
               onClick={() =>
                 document.getElementById("properties")?.scrollIntoView({ behavior: "smooth" })
               }
             >
-              Explore Properties <ChevronRight className="ml-2 h-5 w-5" />
+              Explore Properties <ChevronRight className="ml-2 h-5 w-5 shrink-0" />
             </Button>
-            <Link to="/spa">
-              <Button size="lg" variant="outline" className="border-white text-white">
+            <Link to="/spa" className="block w-full sm:w-auto sm:inline-block">
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full justify-center border-white text-white sm:w-auto"
+              >
                 Book Spa Experience
               </Button>
             </Link>
