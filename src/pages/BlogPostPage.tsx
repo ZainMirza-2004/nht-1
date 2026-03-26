@@ -218,6 +218,35 @@ export default function BlogPostPage() {
   const canonicalPath = post ? `/blog/${post.slug}` : '/blog';
   const keywords = post ? [...baseKeywords, post.category, ...post.keywords] : baseKeywords;
 
+  const origin =
+    typeof window !== 'undefined' && window.location?.origin
+      ? window.location.origin
+      : 'https://nhtestates.co.uk';
+
+  const imageFullUrl = post
+    ? post.imageUrl && post.imageUrl.startsWith('/')
+      ? `${origin}${post.imageUrl}`
+      : post.imageUrl
+    : undefined;
+
+  const blogPostingSchema = post
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        mainEntityOfPage: { '@type': 'WebPage', '@id': `${origin}${canonicalPath}` },
+        headline: post.title,
+        description: description,
+        image: imageFullUrl,
+        author: { '@type': 'Person', name: post.author },
+        publisher: {
+          '@type': 'Organization',
+          name: 'NH&T Estates',
+          logo: { '@type': 'ImageObject', url: `${origin}/logo.png` },
+        },
+        datePublished: post.date,
+      }
+    : undefined;
+
   if (!post) {
     return (
       <div className="min-h-screen pt-20 flex items-center justify-center">
@@ -244,6 +273,7 @@ export default function BlogPostPage() {
         description={description}
         canonicalPath={canonicalPath}
         keywords={keywords}
+        schema={blogPostingSchema}
       />
       <article className='blog-page-single'>
         <div className="relative h-96 md:h-[500px] overflow-hidden">

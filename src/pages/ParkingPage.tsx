@@ -297,12 +297,38 @@ export default function ParkingPage() {
 
   const totalPrice = formData.permitType === 'paid' ? formData.numberOfNights * 5 : 0;
 
+  const origin =
+    typeof window !== 'undefined' && window.location?.origin
+      ? window.location.origin
+      : 'https://nhtestates.co.uk';
+
+  const parkingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Parking & Transport | NH&T Estates',
+    description: 'Seamless arrivals with valet, secure parking, and transport coordination for every stay.',
+    url: `${origin}/parking`,
+    provider: {
+      '@type': 'Organization',
+      name: 'NH&T Estates',
+      url: origin,
+      logo: { '@type': 'ImageObject', url: `${origin}/logo.png` },
+    },
+    mainEntity: {
+      '@type': 'Service',
+      name: 'Parking Permit',
+      serviceType: 'Parking Permit Service',
+      areaServed: 'Cardiff, UK',
+    },
+  } as const;
+
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-stone-50 via-white to-stone-50">
       <Seo
         title="Parking & Transport | NH&T Estates"
         description="Seamless arrivals with valet, secure parking, and transport coordination for every stay."
         canonicalPath="/parking"
+        schema={parkingSchema}
         keywords={[
           'parking permit',
           'guest parking',
@@ -310,6 +336,10 @@ export default function ParkingPage() {
           'Cardiff parking',
           'property parking',
           'arrival services',
+          'parking booking',
+          'online parking',
+          'car parking',
+          'parking slot booking'
         ]}
       />
       <style>{`

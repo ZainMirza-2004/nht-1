@@ -18,6 +18,7 @@ interface SeoProps {
   includeQuery?: boolean;
   noIndex?: boolean;
   keywords?: string | string[];
+  schema?: Record<string, any>;
 }
 
 const getOrigin = () => {
@@ -60,6 +61,7 @@ export default function Seo({
   includeQuery = false,
   noIndex = false,
   keywords,
+  schema,
 }: SeoProps) {
   const location = useLocation();
   const origin = getOrigin();
@@ -76,6 +78,9 @@ export default function Seo({
       <meta name="keywords" content={keywordContent} />
       <link rel="canonical" href={canonicalUrl} />
       {noIndex ? <meta name="robots" content="noindex, nofollow" /> : null}
+      {schema ? (
+        <script type="application/ld+json">{JSON.stringify(schema)}</script>
+      ) : null}
     </Helmet>
   );
 }

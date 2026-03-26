@@ -65,12 +65,33 @@ export default function BlogPage() {
       ? blogPosts
       : blogPosts.filter((post) => post.category === selectedCategory);
 
+  const origin =
+    typeof window !== 'undefined' && window.location?.origin
+      ? window.location.origin
+      : 'https://nhtestates.co.uk';
+
+  const blogSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'NH&T Estates Journal',
+    description: 'Stories and insights on luxury coastal living, wellness, and curated experiences.',
+    url: `${origin}/blog`,
+    publisher: {
+      '@type': 'Organization',
+      name: 'NH&T Estates',
+      url: origin,
+      logo: { '@type': 'ImageObject', url: `${origin}/logo.png` },
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${origin}/blog` },
+  } as const;
+
   return (
     <div className="min-h-screen pt-20 bg-gray-50">
       <Seo
         title="Journal | NH&T Estates"
         description="Stories and insights on luxury coastal living, wellness, and curated experiences."
         canonicalPath="/blog"
+        schema={blogSchema}
         keywords={[
           'NH&T Estates blog',
           'luxury travel',

@@ -358,12 +358,41 @@ export default function CinemaPage() {
 
   const minDate = new Date().toISOString().split('T')[0];
 
+  const origin =
+    typeof window !== 'undefined' && window.location?.origin
+      ? window.location.origin
+      : 'https://nhtestates.co.uk';
+
+  const cinemaSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Private Cinema | NH&T Estates',
+    description: 'Enjoy private cinema bookings with premium seating, immersive sound, and concierge-ready amenities.',
+    url: `${origin}/cinema`,
+    provider: {
+      '@type': 'Organization',
+      name: 'NH&T Estates',
+      url: origin,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${origin}/logo.png`,
+      },
+    },
+    mainEntity: {
+      '@type': 'Service',
+      name: 'Private Cinema',
+      serviceType: 'Private Cinema Booking',
+      areaServed: 'Cardiff, UK',
+    },
+  } as const;
+
   return (
     <div className="min-h-screen pt-20">
       <Seo
         title="Private Cinema | NH&T Estates"
         description="Enjoy private cinema bookings with premium seating, immersive sound, and concierge-ready amenities."
         canonicalPath="/cinema"
+        schema={cinemaSchema}
         keywords={[
           'private cinema Cardiff',
           'cinema booking',
@@ -372,6 +401,10 @@ export default function CinemaPage() {
           'gaming lounge',
           'Netflix cinema',
           'private screening',
+          'book cinema online',
+          'cinema booking',
+          'cinema services',
+          'cinema ticket booking'
         ]}
       />
       <style>{`

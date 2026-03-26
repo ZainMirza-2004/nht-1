@@ -345,12 +345,38 @@ export default function SpaPage() {
 
   const minDate = new Date().toISOString().split('T')[0];
 
+  const origin =
+    typeof window !== 'undefined' && window.location?.origin
+      ? window.location.origin
+      : 'https://nhtestates.co.uk';
+
+  const spaSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Spa & Wellness | NH&T Estates',
+    description: 'Indulge in bespoke spa experiences with private suites, expert therapists, and curated wellness rituals.',
+    url: `${origin}/spa`,
+    provider: {
+      '@type': 'Organization',
+      name: 'NH&T Estates',
+      url: origin,
+      logo: { '@type': 'ImageObject', url: `${origin}/logo.png` },
+    },
+    mainEntity: {
+      '@type': 'Service',
+      name: 'Spa & Wellness',
+      serviceType: 'Private Spa Booking',
+      areaServed: 'Cardiff, UK',
+    },
+  } as const;
+
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-b from-stone-50 via-white to-stone-50">
       <Seo
         title="Luxurious Spa | NH&T Estates"
         description="Indulge in bespoke spa experiences with private suites, expert therapists, and curated wellness rituals."
         canonicalPath="/spa"
+        schema={spaSchema}
         keywords={[
           'private spa Cardiff',
           'luxury spa',
@@ -360,8 +386,12 @@ export default function SpaPage() {
           'cold plunge',
           'wellness retreat',
           'private spa suite',
+          'book spa online',
+          'spa booking',
+          'spa services'
         ]}
       />
+      
       <style>{`
         @keyframes fadeInUp {
           from {

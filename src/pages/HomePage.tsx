@@ -112,12 +112,40 @@ function HomePage() {
     fetchProperties();
   }, [fetchProperties]);
 
+  const origin =
+    typeof window !== "undefined" && window.location?.origin
+      ? window.location.origin
+      : "https://nhtestates.co.uk";
+
+  const landingPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'NH&T Estates - Luxury Airbnbs & Property Management',
+    description:
+      'Experience unparalleled luxury with NH&T Estates. Premium coastal properties with world-class spa and cinema amenities.',
+    url: `${origin}/`,
+    publisher: {
+      '@type': 'Organization',
+      name: 'NH&T Estates',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${origin}/logo.png`,
+      },
+    },
+    mainEntity: {
+      '@type': 'Organization',
+      name: 'NH&T Estates',
+      url: `${origin}/`,
+    },
+  } as const;
+
   return (
     <div className="min-h-screen">
       <Seo
         title="NH&T Estates - Luxury Airbnbs & Property Management"
         description="Experience unparalleled luxury with NH&T Estates. Premium coastal properties with world-class spa and cinema amenities."
         canonicalPath="/"
+        schema={landingPageSchema}
         keywords={[
           'luxury stays',
           'serviced apartments Cardiff',
