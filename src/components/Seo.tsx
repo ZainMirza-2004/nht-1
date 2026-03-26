@@ -22,9 +22,7 @@ interface SeoProps {
 }
 
 const getOrigin = () => {
-  if (typeof window !== 'undefined' && window.location?.origin) {
-    return window.location.origin;
-  }
+  // Always use the canonical site URL (no www) for canonical/meta tags
   return DEFAULT_SITE_URL;
 };
 
