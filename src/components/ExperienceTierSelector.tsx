@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Check, Sparkles, Star } from 'lucide-react';
 
 export type ExperienceTier = 'standard' | 'premium' | 'deluxe';
@@ -27,10 +27,6 @@ export default function ExperienceTierSelector({
   onSelectTier,
   defaultTier = 'premium',
 }: ExperienceTierSelectorProps) {
-  const [highlightedTier, setHighlightedTier] = useState<ExperienceTier | null>(
-    selectedTier || defaultTier
-  );
-
   // Auto-select default tier if none selected
   useEffect(() => {
     if (!selectedTier && defaultTier) {
@@ -41,7 +37,6 @@ export default function ExperienceTierSelector({
 
   const handleTierClick = (tierId: ExperienceTier) => {
     onSelectTier(tierId);
-    setHighlightedTier(tierId);
   };
 
   const getTierStyles = (tier: TierOption, isSelected: boolean) => {

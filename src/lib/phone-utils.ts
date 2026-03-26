@@ -14,7 +14,7 @@ export function formatPhoneToE164(phone: string): string | null {
   if (!phone) return null;
 
   // Remove all spaces, dashes, parentheses, and other formatting
-  let cleaned = phone.replace(/[\s\-\(\)\.]/g, '');
+  let cleaned = phone.replace(/[\s\-().]/g, '');
 
   // If already starts with +, validate E.164 format
   if (cleaned.startsWith('+')) {
@@ -94,7 +94,7 @@ export function formatPhoneForDisplay(phone: string): string {
 export function isValidE164(phone: string): boolean {
   if (!phone) return false;
   const e164Regex = /^\+[1-9]\d{1,14}$/;
-  return e164Regex.test(phone.replace(/[\s\-\(\)\.]/g, ''));
+  return e164Regex.test(phone.replace(/[\s\-().]/g, ''));
 }
 
 /**

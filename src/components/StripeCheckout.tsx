@@ -15,7 +15,8 @@ interface StripeCheckoutProps {
   amount: number; // in pounds
   serviceType: 'spa' | 'cinema' | 'parking';
   bookingId?: string;
-  onSuccess: () => void;
+  /** Optional; paid flows typically complete via /payment-success redirect. */
+  onSuccess?: () => void;
   customerName?: string;
   customerEmail?: string;
 }
@@ -36,11 +37,10 @@ function CheckoutForm({
   amount,
   serviceType,
   bookingId,
-  onSuccess,
   onClose,
   customerName,
   customerEmail,
-}: Omit<StripeCheckoutProps, 'isOpen'>) {
+}: Omit<StripeCheckoutProps, 'isOpen' | 'onSuccess'>) {
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -136,7 +136,6 @@ export default function StripeCheckout({
   amount,
   serviceType,
   bookingId,
-  onSuccess,
   customerName,
   customerEmail,
 }: StripeCheckoutProps) {
@@ -188,9 +187,9 @@ export default function StripeCheckout({
 
       const data = await response.json();
       setClientSecret(data.clientSecret);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error creating payment intent:', err);
-      setError(err.message || 'Failed to initialize payment');
+      setError(err instanceof Error ? err.message : 'Failed to initialize payment');
     } finally {
       setIsLoading(false);
     }
@@ -199,7 +198,7 @@ export default function StripeCheckout({
   if (!isOpen) return null;
 
   const options: StripeElementsOptions = {
-    clientSecret,
+    clientSecret: clientSecret ?? undefined,
     appearance: {
       theme: 'stripe',
       variables: {
@@ -258,7 +257,6 @@ export default function StripeCheckout({
                 amount={amount}
                 serviceType={serviceType}
                 bookingId={bookingId}
-                onSuccess={onSuccess}
                 onClose={onClose}
                 customerName={customerName}
                 customerEmail={customerEmail}

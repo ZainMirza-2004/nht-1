@@ -1,12 +1,11 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight, Star } from "lucide-react";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
 import { supabase } from "../lib/supabase";
 import Button from "../components/Button";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Seo from "../components/Seo";
+import AmenityCarousel from "../components/AmenityCarousel";
 
 /* =======================
    Types
@@ -59,7 +58,25 @@ const testimonials: Testimonial[] = [
   { name: "Haylie", location: "Wales, UK", text: "Comfortable clean and nicely decorated apartment.", rating: 5, date: "July 2025" },
 ];
 
-const duplicatedTestimonials = [...testimonials, ...testimonials, ...testimonials];
+const marqueeItems = [...testimonials, ...testimonials];
+
+const marqueeStyles = `
+  @keyframes marquee-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 60s linear infinite;
+    will-change: transform;
+  }
+  .marquee-wrapper {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  }
+`;
 
 const FEATURED_PROPERTY_IMAGES = [
   "/2bed.webp",
@@ -70,21 +87,59 @@ const FEATURED_PROPERTY_IMAGES = [
   "/Property20.webp",
 ];
 
-/* =======================
-   Component
-======================= */
+const SPA_CAROUSEL_IMAGES = [
+  "/spa1.webp",
+  "/spa2.webp",
+  "/spa3.webp",
+  "/spa4.webp",
+];
+
+const CINEMA_CAROUSEL_IMAGES = [
+  "/cinema1.webp",
+  "/cinema2.webp",
+  "/cinema3.webp",
+];
+
+/** Homepage-only: when DB title matches (case-insensitive), show this copy instead. */
+const HOME_FEATURED_BY_TITLE: Record<
+  string,
+  Pick<Property, "title" | "description" | "location">
+> = {
+  "coastal serenity villa": {
+    title: "Luxury Victorian Apartment",
+    location: "Cardiff, UK",
+    description:
+      "A beautiful Victorian apartment with period character, generous rooms, and elegant finishes—perfect for guests who want heritage charm with modern comfort.",
+  },
+  "modern harborside retreat": {
+    title: "High-Rise Stay in London",
+    location: "London, UK",
+    description:
+      "Sleek high-rise living in London with sweeping city views, contemporary interiors, and a premium base for work or leisure in the capital.",
+  },
+  "elegant country manor": {
+    title: "Elegant Penthouse",
+    location: "London, UK",
+    description:
+      "An elegant penthouse with spacious layout, refined design, and outstanding views—luxury sky-high living for a standout city stay.",
+  },
+  "beachfront paradise": {
+    title: "Central London apartment",
+    location: "Central London, UK",
+    description:
+      "Right in the heart of London with unbeatable access to dining, culture, and transport—a stylish, comfortable base to explore everything the city offers.",
+  },
+  "contemporary lighthouse lodge": {
+    title: "Contemporary Apartment",
+    location: "London, UK",
+    description:
+      "A bright contemporary apartment with clean lines, open living space, and modern comforts throughout—effortless style for short breaks or longer stays.",
+  },
+};
+
 function HomePage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const autoplay = useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: false, stopOnMouseEnter: true })
-  );
-
-  const [emblaRef] = useEmblaCarousel(
-    { loop: true, align: "start" },
-    [autoplay.current]
-  );
 
   const fetchProperties = useCallback(async () => {
     try {
@@ -96,10 +151,21 @@ function HomePage() {
 
       if (error) throw error;
       const list = (data ?? []) as Property[];
-      const withImages = list.map((p, i) => ({
-        ...p,
-        image_url: FEATURED_PROPERTY_IMAGES[i] ?? p.image_url,
-      }));
+      const withImages = list.map((p, i) => {
+        const key = p.title.trim().toLowerCase();
+        const overlay = HOME_FEATURED_BY_TITLE[key];
+        return {
+          ...p,
+          image_url: FEATURED_PROPERTY_IMAGES[i] ?? p.image_url,
+          ...(overlay
+            ? {
+                title: overlay.title,
+                description: overlay.description,
+                location: overlay.location,
+              }
+            : {}),
+        };
+      });
       setProperties(withImages);
     } catch (err) {
       console.error(err);
@@ -141,6 +207,7 @@ function HomePage() {
 
   return (
     <div className="min-h-screen">
+      <style>{marqueeStyles}</style>
       <Seo
         title="NH&T Estates - Luxury Airbnbs & Property Management"
         description="Experience unparalleled luxury with NH&T Estates. Premium coastal properties with world-class spa and cinema amenities."
@@ -181,19 +248,22 @@ function HomePage() {
           <p className="text-xl md:text-2xl mb-10">
             Experience unparalleled comfort in Cardiff
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="mx-auto flex w-full max-w-[280px] flex-col gap-4 sm:max-w-none sm:flex-row sm:justify-center">
             <Button
               size="lg"
-              className="flex"
-              style={{alignItems:'center'}}
+              className="flex w-full justify-center sm:w-auto"
               onClick={() =>
                 document.getElementById("properties")?.scrollIntoView({ behavior: "smooth" })
               }
             >
-              Explore Properties <ChevronRight className="ml-2 h-5 w-5" />
+              Explore Properties <ChevronRight className="ml-2 h-5 w-5 shrink-0" />
             </Button>
-            <Link to="/spa">
-              <Button size="lg" variant="outline" className="border-white text-white">
+            <Link to="/spa" className="block w-full sm:w-auto sm:inline-block">
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full justify-center border-white text-white sm:w-auto"
+              >
                 Book Spa Experience
               </Button>
             </Link>
@@ -254,39 +324,59 @@ function HomePage() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-serif text-center mb-12">
-            Guest Testimonials
-          </h2>
+      {/* SPA CAROUSEL */}
+      <AmenityCarousel
+        images={SPA_CAROUSEL_IMAGES}
+        bookingPath="/spa"
+        bookingLabel="Book Spa Experience"
+        sectionTitle="Spa Experiences"
+      />
 
-          <div ref={emblaRef} className="overflow-hidden">
-            <div className="flex gap-6">
-              {duplicatedTestimonials.map((t, i) => (
-                <div
-                  key={i}
-                  className="min-w-[300px] bg-white p-6 rounded-xl shadow"
-                >
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(t.rating)].map((_, j) => (
-                      <Star
-                        key={j}
-                        className="h-4 w-4 text-yellow-500 fill-current"
-                      />
-                    ))}
-                  </div>
-                  <p className="italic mb-4">"{t.text}"</p>
-                  <p className="font-semibold">{t.name}</p>
-                  {t.location && (
-                    <p className="text-sm text-gray-500">{t.location}</p>
-                  )}
-                  {t.date && (
-                    <p className="text-sm text-gray-400">{t.date}</p>
-                  )}
+      {/* CINEMA CAROUSEL */}
+      <AmenityCarousel
+        images={CINEMA_CAROUSEL_IMAGES}
+        bookingPath="/cinema"
+        bookingLabel="Reserve Cinema"
+        sectionTitle="Cinema Experiences"
+      />
+
+      {/* TESTIMONIALS (CSS marquee, no Embla/JS) */}
+      <section className="py-24 bg-gray-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 mb-12">
+          <div className="flex items-center gap-6 justify-center">
+            <span className="flex-1 max-w-[120px] h-px bg-gradient-to-r from-transparent to-amber-400/60" />
+            <h2 className="text-4xl font-serif text-center">
+              Guest Testimonials
+            </h2>
+            <span className="flex-1 max-w-[120px] h-px bg-gradient-to-l from-transparent to-amber-400/60" />
+          </div>
+        </div>
+
+        <div className="marquee-wrapper">
+          <div className="marquee-track">
+            {marqueeItems.map((t, i) => (
+              <div
+                key={i}
+                className="min-w-[300px] max-w-[300px] bg-white p-6 rounded-xl shadow mx-3 flex-shrink-0"
+              >
+                <div className="flex gap-1 mb-4">
+                  {[...Array(t.rating)].map((_, j) => (
+                    <Star
+                      key={j}
+                      className="h-4 w-4 text-yellow-500 fill-current"
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
+                <p className="italic mb-4 text-gray-700">"{t.text}"</p>
+                <p className="font-semibold text-gray-900">{t.name}</p>
+                {t.location && (
+                  <p className="text-sm text-gray-500">{t.location}</p>
+                )}
+                {t.date && (
+                  <p className="text-sm text-gray-400">{t.date}</p>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>

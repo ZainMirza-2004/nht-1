@@ -32,7 +32,7 @@ const mockProperties: Property[] = [
     sleeps: 5,
     rating: 5,
     airbnb_url:
-      'https://nhtestates.bookeddirectly.com/g/roath/cardiff-centre-2br-sleeps-5-jacuzzi-%2526-free-parking/923ad4?number_of_guests=1',
+      'https://www.airbnb.co.uk/rooms/1450948086102053640?source_impression_id=p3_1773856992_P3hNc-vlQ0kSf89H',
   },
   {
     id: '3',
@@ -74,7 +74,7 @@ const mockProperties: Property[] = [
     sleeps: 2,
     rating: 5,
     airbnb_url:
-      'https://nhtestates.bookeddirectly.com/g/roath/new-cinema-experience-in-cardiff-for-couples-%252B-spa/50215a?number_of_guests=1',
+      'https://www.airbnb.co.uk/rooms/1451152157259670563?source_impression_id=p3_1773856992_P3ytkIbuTKvg-CfQ',
   },
   {
     id: '6',
@@ -102,7 +102,7 @@ const mockProperties: Property[] = [
     sleeps: 6,
     rating: 5,
     airbnb_url:
-      'https://nhtestates.bookeddirectly.com/g/greater-london/central-wembley-stadium-stay-%25E2%2580%25A2-sleeps-6-%25E2%2580%25A2-parking/ffb684?number_of_guests=1',
+      'https://www.airbnb.co.uk/rooms/1612635270848316076?source_impression_id=p3_1773857174_P3j8dBTqV0L9plCM',
   },
   {
     id: '8',
@@ -116,7 +116,7 @@ const mockProperties: Property[] = [
     sleeps: 8,
     rating: 5,
     airbnb_url:
-      'https://nhtestates.bookeddirectly.com/g/greater-london/highrise-stay-by-wembley-stadium---parking---pool/428db3?number_of_guests=1',
+      'https://www.airbnb.co.uk/rooms/1569908005620218669?source_impression_id=p3_1773857174_P3qE6raBEtwsqs1J',
   },
   {
     id: '9',
@@ -144,7 +144,7 @@ const mockProperties: Property[] = [
     sleeps: 2,
     rating: 5,
     airbnb_url:
-      'https://nhtestates.bookeddirectly.com/g/roath/central-1br-cardiff-flat-%2526-free-parking-%252B-paid-spa/6d92e0?number_of_guests=1',
+      'https://www.airbnb.co.uk/rooms/1553275092504034566?source_impression_id=p3_1773857174_P3Zs_UD7Gxs_abOL',
   },
   {
     id: '11',
