@@ -184,6 +184,25 @@ function run() {
     writeRouteHtml(route, out);
     console.log('Prerendered', route);
   });
+
+  // Write a static 404 page so hosts can serve a proper 404 status
+  try {
+    let notFoundHtml = baseHtml;
+    notFoundHtml = notFoundHtml.replace(/<title>[\s\S]*?<\/title>/i, '<title>404 Not Found - NH&T Estates</title>');
+
+    const notFoundMarkup = `\n      <div class="flex items-center justify-center py-24 px-4">\n        <div class="max-w-2xl text-center">\n          <h1 class="text-6xl font-extrabold mb-4">404</h1>\n          <p class="text-lg text-gray-600 mb-6">Sorry, the page you're looking for doesn't exist.</p>\n          <a href="/" class="inline-block px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Go to Home</a>\n        </div>\n      </div>\n    `;
+
+    // replace the React root content with static 404 markup
+    notFoundHtml = notFoundHtml.replace(/<div id="root">[\s\S]*?<\/div>/i, `<div id="root">${notFoundMarkup}</div>`);
+
+    // inject a canonical and minimal schema for the 404 page
+    notFoundHtml = inject(notFoundHtml, `${origin}/404`, { '@context': 'https://schema.org', '@type': 'WebPage', name: '404 Not Found', description: 'Page not found', url: `${origin}/404` });
+
+    fs.writeFileSync(path.join(DIST, '404.html'), notFoundHtml, 'utf8');
+    console.log('Wrote 404.html');
+  } catch (err) {
+    console.error('Failed to write 404.html', err);
+  }
 }
 
 run();

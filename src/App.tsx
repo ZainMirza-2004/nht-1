@@ -12,6 +12,7 @@ const BlogPage = lazy(() => import('./pages/BlogPage'));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
 const BookingConfirmationPage = lazy(() => import('./pages/BookingConfirmationPage'));
 const ExploreAllProperties = lazy(() => import('./pages/ExploreAllProperties'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
                   <Route path="/properties" element={<ExploreAllProperties />} />
                   <Route path="/payment-success" element={<BookingConfirmationPage />} />
                   <Route path="/booking-confirmation" element={<BookingConfirmationPage />} />
+                  <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </Suspense>
             </ErrorBoundary>
